@@ -1,66 +1,29 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+「 sikaku（仮） 」は受動的な姿勢でも資格取得できるよう支援するサイトです。資格取得への学習のスタートの支援や学習継続へのモチベーションの提供が目的です。
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+背景
+私自身、資格をたくさん持っているわけではないですが、資格に向けた勉強がとても好きです。
 
-## About Laravel
+なんといっても資格の良さは誰にとっても公平にその能力を示すことのできる絶対性にあると思います。コミュニケーション能力などのような抽象度の高い能力と比べて、資格は資格を取得するための能力を獲得するためのロードマップが具体的に示すことができます。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+社会では、自分で物事を考える主体性が求められ、またその重要性といえば社会人であれば誰もが感じていることだと思います。私自身もそのうちの一人として、会社ではいかに周囲へ貢献することができるか、他社への貢献が巡り巡って自分の成長へ還元されると信じて取り組んでいるのですが、取得の目的は別として、資格取得の勉強ぐらい完全に受動的になって取り組んでもいいと思います。また資格取得に向けた学習のハードルを下げ、一人でも学習に踏み込む方が増えれば幸いと感じます。
+上記がこのサイトの開発に取り組んだ主な理由となります。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+概要
+背景で記載した通り、資格を思いっきり受動的に取得できるよう支援するサイトとなります。
+受動的の定義として、それぞれの人に合わせて資格の取得までのレールを提案することとしています。また取得までの取り組みに際してのモチベーションの提供はします。一方で勉強時間の確保は各自ですることが求められます。
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+機能
+主な機能は以下となります。
 
-## Learning Laravel
+・資格取得までの経験の投稿、閲覧、編集、削除
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+投稿
+取得までに使ったサービス、要した期間を情報として提供していただきます。
+いいね機能により投稿数の増加が見込められればと考えています。
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+閲覧
+投稿の一覧がご覧いただけます。
+検索機能により、自分が取得しようとしている資格に関する投稿に絞り込んだり、いいね数の多い人気記事を表示できるようにすることで、資格取得を考えている取り組みの第一歩を踏み込むモチベーションの提供につながればと考えています。
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+編集、削除
+投稿した情報をユーザー側で管理できるようにすることで、安心して投稿していただけます。
