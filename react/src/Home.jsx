@@ -1,14 +1,34 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './index.css'
 import { Button } from '@material-tailwind/react'
+import TopPage from './components/ListItem'
+import axiosClient from './axios'
+import HomePosts from './components/HomePosts'
 
 const Home = () => {
+  const [qualifications,setQualifications] = useState([]);
+  const [posts,setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosClient.get("qualifications");
+        const postResponse = await axiosClient.get("posts");
+        console.log(postResponse)
+        setQualifications(response.data);
+        setPosts(postResponse.data)
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <div className='justify-center items-center text-center block gap-4'>Homejjjj
-    <Button variant="">djjjjjjjjjjjj</Button>
     <div>
-      <Button color='green' variant='gradient'>button</Button>
-    </div>
+    <TopPage qualifications={qualifications} />
+    <HomePosts posts={posts} />
     </div>
   )
 }

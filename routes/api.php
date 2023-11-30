@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\QualificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,8 +21,10 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('signup', [AuthController::class, 'signup']);
-
 Route::post('login', [AuthController::class, 'login']);
+
+Route::get('qualifications', [QualificationController::class, 'index']);
+Route::get('posts', [PostController::class, 'home']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
