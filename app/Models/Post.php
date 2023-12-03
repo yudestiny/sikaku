@@ -71,6 +71,7 @@ class Post extends Model
      */
     public function steps()
     {
-        return $this->hasMany(Step::class, 'post_id', 'id');
+        return $this->hasMany(Step::class, 'post_id', 'id')->leftJoin('services', 'steps.service_id', '=', 'services.id')
+            ->orderBy('step_number');
     }
 }

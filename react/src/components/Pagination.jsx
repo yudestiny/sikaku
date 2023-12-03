@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button, IconButton } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
-import Post from "../Post";
 import axiosClient from "../axios";
 import { useLocation } from "react-router-dom";
+import Posts from "../Posts";
 
 export function Pagination() {
   const [active, setActive] = React.useState(1);
@@ -82,7 +82,7 @@ const  page = () => {
 
   return (
     <>
-    <Post posts={posts} category={selectCategory} />
+    <Posts posts={posts} category={selectCategory} />
     <div className="flex justify-center items-center gap-4">
       <Button
         variant="text"

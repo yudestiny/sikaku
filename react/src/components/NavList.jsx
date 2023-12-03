@@ -49,7 +49,7 @@ function NavList() {
         color="blue-gray"
         className="p-1 font-medium"
       >
-        <a href="logout" onClick={handleClick} className="flex items-center hover:text-blue-500 transition-colors">
+        <a href="/logout" onClick={handleClick} className="flex items-center hover:text-blue-500 transition-colors">
           ログアウト
         </a>
       </Typography>
@@ -61,7 +61,7 @@ function NavList() {
         color="blue-gray"
         className="p-1 font-medium"
       >
-        <a href="login" className="flex items-center hover:text-blue-500 transition-colors">
+        <a href="/login" className="flex items-center hover:text-blue-500 transition-colors">
           ログイン
         </a>
       </Typography>
@@ -71,7 +71,7 @@ function NavList() {
         color="blue-gray"
         className="p-1 font-medium"
       >
-        <a href="signup" className="flex items-center hover:text-blue-500 transition-colors">
+        <a href="/signup" className="flex items-center hover:text-blue-500 transition-colors">
           新規登録
         </a>
       </Typography>

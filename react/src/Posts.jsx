@@ -5,8 +5,9 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
+import { Link } from "react-router-dom";
 
-export default function Post({posts}) {
+export default function Posts({posts}) {
 
     return (
     <>
@@ -25,7 +26,7 @@ export default function Post({posts}) {
         </Typography>
       </CardBody>
       <CardFooter className="pt-0">
-        <Button>もっと見る</Button>
+        <Link to={`detail/${post.id}`}><Button>もっと見る</Button></Link>
       </CardFooter>
     </Card>
     ))}

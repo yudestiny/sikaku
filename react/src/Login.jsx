@@ -102,7 +102,7 @@ export function Login() {
         </Button>
         <Typography color="gray" className="mt-4 text-center font-normal">
           新規登録は{" "}
-          <a href="signup" className="font-medium text-gray-900">
+          <a href="/signup" className="font-medium text-gray-900">
             こちら
           </a>
         </Typography>
