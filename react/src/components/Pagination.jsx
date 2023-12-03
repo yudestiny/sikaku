@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Button, IconButton } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { useStateContext } from "../context/ContextProvider";
 import Post from "../Post";
 import axiosClient from "../axios";
+import { useLocation } from "react-router-dom";
 
-export function Pagination({category}) {
+export function Pagination() {
   const [active, setActive] = React.useState(1);
   const [ posts, setPosts ] = useState([]);
+
+  const location = useLocation()
+  const [selectCategory, setSelectCategory] = useState(location.state)
 
 
   useEffect (() => {
     const fetchData = async() => {
       try {
-        // console.log(category)
-        const response = await axiosClient.get(`posts/index`);
+        console.log(selectCategory)
+        const response = await axiosClient.post(`posts/index`,selectCategory);
+        console.log(response)
         setPosts(response.data);
       } catch (err) {
         console.log(err);
@@ -22,12 +26,11 @@ export function Pagination({category}) {
     }
     fetchData();
   },[])
-  console.log(posts)
 
   const handleClick = async(index) => {
     setActive(index);
       try {
-        const response = await axiosClient.get(`posts/index/?page=${index}`);
+        const response = await axiosClient.post(`posts/index/?page=${index}`,selectCategory);
         console.log(response);
         setPosts(response.data);
       } catch (err) {
@@ -48,7 +51,7 @@ export function Pagination({category}) {
     if (active === posts.last_page) return;
 
     try {
-      const response = await axiosClient.get(`posts/index/?page=${posts.current_page + 1}`);
+      const response = await axiosClient.post(`posts/index/?page=${posts.current_page + 1}`,selectCategory);
       console.log(response);
       setPosts(response.data);
     } catch (err) {
@@ -61,7 +64,7 @@ export function Pagination({category}) {
     if (active === 1) return;
 
     try {
-      const response = await axiosClient.get(`posts/index/?page=${posts.current_page - 1}`);
+      const response = await axiosClient.post(`posts/index/?page=${posts.current_page - 1}`,selectCategory);
       console.log(response);
       setPosts(response.data);
     } catch (err) {
@@ -72,14 +75,14 @@ export function Pagination({category}) {
 const  page = () => {
     const number = [];
     for (let i = 1; i <= posts.last_page; i++) {
-      number.push(<IconButton {...getItemProps(i)}>{i}</IconButton>);
+      number.push(<IconButton key={i} {...getItemProps(i)}>{i}</IconButton>);
     }
     return number;
   };
 
   return (
     <>
-    <Post posts={posts} />
+    <Post posts={posts} category={selectCategory} />
     <div className="flex justify-center items-center gap-4">
       <Button
         variant="text"
