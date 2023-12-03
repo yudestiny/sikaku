@@ -10,6 +10,7 @@ const StateContext = React.createContext({
 export const ContextProvider = ({ children }) => {
   const [currentUser,setCurrentUser] = useState({});
   const [userToken,_setUserToken] = useState(null);
+  const [posts,setPosts] = useState([]);
   const setUserToken = (token) => {
     if (token) {
       localStorage.setItem('TOKEN', token)

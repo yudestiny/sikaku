@@ -1,3 +1,5 @@
+import { Typography } from "@material-tailwind/react"
+
 const posts = [
   {
     id: 1,
@@ -23,7 +25,7 @@ export default function HomePosts({posts}) {
 
   return (
     <div className="bg-white py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 mb-8">
         <div className="mx-auto max-w-2xl lg:mx-0">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">資格取得者たちの声</h2>
           <p className="mt-2 text-lg leading-8 text-gray-600">
@@ -65,6 +67,13 @@ export default function HomePosts({posts}) {
           ))}
         </div>
       </div>
+    <div className="items-center">
+      <Typography
+          as="a"
+          href="posts"
+          variant="h6"
+          className="mr-4 cursor-pointer py-1.5 text-right">もっと見る→</Typography>
+    </div>
     </div>
   )
 }

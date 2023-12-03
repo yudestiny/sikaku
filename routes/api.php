@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\QualificationController;
 use Illuminate\Http\Request;
@@ -24,7 +25,9 @@ Route::post('signup', [AuthController::class, 'signup']);
 Route::post('login', [AuthController::class, 'login']);
 
 Route::get('qualifications', [QualificationController::class, 'index']);
+Route::get('categories', [CategoryController::class, 'home']);
 Route::get('posts', [PostController::class, 'home']);
+Route::get('posts/index', [PostController::class, 'index']);
 
 
 Route::middleware('auth:sanctum')->group(function () {

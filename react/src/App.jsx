@@ -4,6 +4,8 @@ import './index.css'
 import Layout from "./layout/Layout"
 import { Signup } from "./Signup"
 import { Login } from "./Login"
+import Post from "./Post"
+import { Pagination } from "./components/Pagination"
 
 function App() {
 
@@ -14,6 +16,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="Signup" element={<Signup />} />
+          <Route path="posts" element={<Pagination />} />
         </Route>
       </Routes>
     </>

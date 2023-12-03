@@ -12,4 +12,9 @@ class PostController extends Controller
     {
         return Post::select('posts.id', 'posts.target', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')->join('users', 'posts.user_id', '=', 'users.id')->join('services', 'posts.service_id', '=', 'services.id')->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')->limit(5)->get();
     }
+
+    public function index ()
+    {
+        return Post::paginate(9);
+    }
 }
