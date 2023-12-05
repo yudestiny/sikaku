@@ -28,7 +28,7 @@ class PostController extends Controller
         return $query->paginate(9);
     }
 
-    public function detail ($post_id)
+    public function detail($post_id)
     {
         $detail = Post::with('steps')->select('posts.id', 'posts.target', 'posts.start_date', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
         ->join('users', 'posts.user_id', '=', 'users.id')
@@ -39,6 +39,18 @@ class PostController extends Controller
 
         return response()->json($detail);
     }
+
+    // public function edit($post_id, Request $request)
+    // {
+    //     $detail = Post::with('steps')->select('posts.id', 'posts.target', 'posts.start_date', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
+    //     ->join('users', 'posts.user_id', '=', 'users.id')
+    //     ->join('services', 'posts.service_id', '=', 'services.id')
+    //     ->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
+    //     ->where('posts.id', $post_id)
+    //         ->first();
+
+    //     return response()->json($detail);
+    // }
 
     public function destroy ($post_id)
     {
