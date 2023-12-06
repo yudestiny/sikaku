@@ -10,32 +10,44 @@ import 'swiper/css';
 
 
 const PostEditor = () => {
-  const location = useLocation();
-  const {post} = location.state;
-  const {id} = useParams();
-  // const [post,setPost] = useState([]);
-    const { currentUser } = useStateContext();
+    const {id} = useParams();
+    const [post,setPost] = useState({})
     const navigate = useNavigate();
-    const [qualification,setQualification] = useState(post.qualification_name);
-    const [target,setTarget] = useState(post.target);
-    const [startDate,setStartDate] = useState(post.start_date);
-    const [service,setService] = useState(post.service_name);
-    const [description,setDescription] = useState(post.description);
-    const [steps,setSteps] = useState(post.steps);
+  // const location = useLocation();
+  // const post = location.state?.post;
+  //   const { currentUser } = useStateContext();
 
-  // useEffect (() => {
-  //   const fetchData = async() => {
-  //     try {
-  //       const response = await axiosClient.get(`posts/detail/${id}`);
-  //       const data = response.data;
-  //       setPost(data);
-  //       setQualification(data.qualification_name);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  //   fetchData();
-  // },[id])
+    const [qualification,setQualification] = useState();
+    const [target,setTarget] = useState();
+    const [startDate,setStartDate] = useState();
+    const [service,setService] = useState();
+    const [description,setDescription] = useState();
+    const [steps,setSteps] = useState();
+
+      useEffect (() => {
+        const fetchData = async() => {
+          try {
+            const response = await axiosClient.get(`posts/detail/${id}`);
+            const data = response.data;
+            setPost(data);
+    setQualification(data.qualification_name);
+    setTarget(data.target);
+    setStartDate(data.start_date);
+    setService(data.service_name);
+    setDescription(data.description);
+    setSteps(data.steps);
+
+          } catch (err) {
+            console.log(err);
+          }
+        }
+        fetchData();
+      },[id])
+
+  // useEffect(() => {
+  //   if (!post) return;
+  // },[post])
+
 
   const handleChange = (index,column,value) => {
     const data = [...steps];
@@ -95,21 +107,27 @@ const PostEditor = () => {
   }
 
   const handleEditConfirm = async() => {
-      try {
+    try {
+        navigate(`/posts/detail/${post.id}`);
         const response = axiosClient.put(`/posts/${post.id}`, {
-
+          id:post.id,
+          qualification,
+          target,
+          service,
+          start_date:startDate,
+          description,
+          steps
         })
         console.log(response)
-        navigate(`/posts/detail/${post.id}`);
       } catch (err) {
         console.log(err)
       }
   }
 
-  console.log(steps)
+  console.log(post)
   return (
     <>
-      <form onSubmit={handleEditConfirm}>
+      <form >
         <div className="space-y-12 px-6">
           <div className="pb-2">
             <Typography variant='h2' className="text-base font-semibold leading-7 text-gray-900 mb-4">資格取得詳細</Typography>
@@ -126,7 +144,7 @@ const PostEditor = () => {
                       rounded-md w-32 px-6 p-2 my-1.5  align-baseline items-center text-center justify-center text-sm font-semibold text-gray-900 ring-inset bg-white
                       "
                     >
-                      {post.user_name}
+                      {post?.user_name}
                     </Typography>
                   </div>
                   <div className='md:flex  md:justify-end md:text-right md:w-3/4 mr-6'>
@@ -233,12 +251,12 @@ const PostEditor = () => {
           <Link>
             <Button
 
-              className="rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={handleEditConfirm}
             >
               確定する
             </Button>
           </Link>
-          <Link to={`/posts/detail/${post.id}`}>
+          <Link to={`/posts/detail/${post?.id}`}>
             <Button type="button" className="rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
               戻る
             </Button>

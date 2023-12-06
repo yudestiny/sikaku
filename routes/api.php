@@ -29,7 +29,7 @@ Route::get('categories', [CategoryController::class, 'home']);
 Route::get('posts', [PostController::class, 'home']);
 Route::post('posts/index', [PostController::class, 'index']);
 Route::get('posts/detail/{post_id}', [PostController::class, 'detail']);
-Route::put('posts/{post_id}', [PostController::class, 'edit']);
+Route::put('posts/{post_id}', [PostController::class, 'update']);
 Route::delete('posts/{post_id}', [PostController::class, 'destroy']);
 
 
