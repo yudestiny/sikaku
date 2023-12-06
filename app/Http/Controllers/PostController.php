@@ -64,8 +64,8 @@ class PostController extends Controller
         $qualificationId = Qualification::select('id')->where('name', $request['qualification']);
 
         foreach ($request['steps'] as $step) {
-            if ($qualification !== $request['qualification']) {
-                $exStep = Step::find($step['id']);
+            $exStep = Step::find($step['id']);
+            if ($exStep !== $step) {
                 $exStep->update([
                     'step_number' => $step['step_number'],
                     'period' => $step['period'],
