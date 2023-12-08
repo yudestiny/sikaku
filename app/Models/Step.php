@@ -32,7 +32,9 @@ class Step extends Model
         'name' => 'string',
         'step_number' => 'integer',
         'period' => 'string',
-        'description' => 'string'
+        'description' => 'string',
+        'id' => 'string',
+
     ];
 
     /**

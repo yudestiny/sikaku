@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('steps', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id', 10)->primary();
             $table->foreignUuId('post_id')->constrained()->onDelete('cascade');
             $table->foreignId('service_id')->constrained()->nullable();
             $table->unsignedTinyInteger('step_number');

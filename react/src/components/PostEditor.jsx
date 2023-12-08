@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axiosClient from '../axios'
 import { Form, Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeftIcon, ArrowRightCircleIcon, ArrowRightIcon, MinusIcon, PhotoIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftCircleIcon, ArrowLeftIcon, ArrowRightCircleIcon, ArrowRightIcon, MinusIcon, PhotoIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { Button, Card, CardBody, CardFooter, CardHeader, Input, Textarea, Typography } from '@material-tailwind/react'
 import { useStateContext } from '../context/ContextProvider'
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -20,6 +20,7 @@ const PostEditor = () => {
     const [qualification,setQualification] = useState();
     const [target,setTarget] = useState();
     const [startDate,setStartDate] = useState();
+    const [status,setStatus] = useState();
     const [service,setService] = useState();
     const [description,setDescription] = useState();
     const [steps,setSteps] = useState();
@@ -33,6 +34,7 @@ const PostEditor = () => {
     setQualification(data.qualification_name);
     setTarget(data.target);
     setStartDate(data.start_date);
+    setStatus(data.status_name);
     setService(data.service_name);
     setDescription(data.description);
     setSteps(data.steps);
@@ -112,6 +114,7 @@ const PostEditor = () => {
         const response = axiosClient.put(`/posts/${post.id}`, {
           id:post.id,
           qualification,
+          status,
           target,
           service,
           start_date:startDate,
@@ -155,7 +158,7 @@ const PostEditor = () => {
               </div>
 
               <div className='grid-cols-2'>
-                <div className='col-span-1 sm:flex'>
+                <div className='col-span- sm:flex'>
                   <div className="sm:w-1/2 mb-8">
                     <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
                       取得資格
@@ -167,15 +170,6 @@ const PostEditor = () => {
       </svg> */}
                     </div>
                   </div>
-
-                  <div className="sm:w-1/2 mb-8">
-                    <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
-                      学習目的
-                    </label>
-                    <div className="mt-2 flex">
-                      <Input value={target} onChange={e => setTarget(e.target.value)} className='mr-4' placeholder='例：転職を考えているから'/>
-                    </div>
-                  </div>
                 </div>
 
                 <div className='col-span-1 sm:flex'>
@@ -185,6 +179,26 @@ const PostEditor = () => {
                     </label>
                     <div className="mt-2 flex">
                       <Input type='date' value={startDate} onChange={e => setStartDate(e.target.value)} className='mr-4'/>
+                    </div>
+                  </div>
+
+                  <div className="sm:w-1/2 mb-8">
+                    <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
+                      学習開始前のステータス
+                    </label>
+                    <div className="mt-2 flex">
+                      <Input value={status} onChange={e => setStatus(e.target.value)} className='mr-4' placeholder='例：まったくの初心者'/>
+                    </div>
+                  </div>
+                </div>
+
+                <div className='col-span- sm:flex'>
+                  <div className="sm:mr-2 sm:w-1/2 mb-8">
+                    <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
+                      学習目的
+                    </label>
+                    <div className="mt-2 flex">
+                      <Input value={target} onChange={e => setTarget(e.target.value)} className='mr-4' placeholder='例：転職を考えているから'/>
                     </div>
                   </div>
 
@@ -212,34 +226,36 @@ const PostEditor = () => {
                 <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
                   学習ステップ
                 </label>
-                <div className='grid grid-cols-2'>
+                <div className='grid lg:grid-cols-2 2xl:grid-cols-3'>
                       {steps?.map((step,index) => {
                         return (
-                          <div>
-                    <div className='flex items-end justify-center'>
-                        <div className='cols-span-1 items-center flex'>
+                          <div className='block -cols-6'>
+                    <div className='flex items-center justify-center'>
+                        <div className='col-span-1 items-center flex'>
                       {step.step_number !== 1 &&
-                          <ArrowLeftIcon className='w-12' onClick={() => handleLeft(index)} />
+                          <ArrowLeftCircleIcon className='w-6 hover:text-gray-700' onClick={() => handleLeft(index)} />
                         }
                         </div>
-                        <Card className="cols-span-4 w-1/3 mt-6 mx-4 pt-3 shadow-2xl mb-2">
+                        <Card className="col-span-4 mt-6 mx-4 pt-3 shadow-2xl mb-2">
                           <CardFooter className="flex pb-3 pt-0 mb-0">
                             <Typography className='text-center items-center py-2 mr-3 justify-center text-md'>STEP<span className='rounded-md '>{step.step_number}</span></Typography>
-                            <Button color='black' disabled className='bg-black px-3 rounded-full'><Input className='' value={step.period} onChange={(e) => handleChange(index,"period",e.target.value)}/></Button>
+                            <Input className='' value={step.period} onChange={(e) => handleChange(index,"period",e.target.value)}/>
                           </CardFooter>
-                          <CardBody className='pt-0'>
+                          <CardBody className='py-0 bg-cover'>
                             <Input variant="h5" value={step.name} onChange={(e) => handleChange(index,"name",e.target.value)} color="blue-gray" className="mb-2"/>
                             <Textarea value={step.description} onChange={(e) => handleChange(index,"description",e.target.value)} />
                           </CardBody>
-                        </Card>
-                        <div className='cols-span-1 items-center flex'>
-                          <ArrowRightIcon className='w-12' onClick={() => handleRight(index)} />
-                        </div>
-                    </div>
-                        <div className='flex justify-center text-center gap-x-4 items-center bg-white'>
+                        <div className='flex justify-center text-center pb-2 gap-4 items-center bg-white'>
                           <PlusIcon className='w-6 rounded-full hover:bg-red-500 items-center justify-center text-center block' onClick={() => handleAdd(index)} />
                           <MinusIcon className='w-6 rounded-full hover:bg-blue-500 items-center justify-center text-center block' onClick={() => handleDelete(index)}/>
                         </div>
+                        </Card>
+                        <div className='grid-item col-span-1 items-center flex'>
+                      {step.step_number !== steps.length  &&
+                          <ArrowRightCircleIcon className='w-6 hover:text-gray-700' onClick={() => handleRight(index)} />
+                        }
+                        </div>
+                    </div>
                           </div>
   )})}
                 </div>

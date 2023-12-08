@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\Qualification;
+use App\Models\Service;
 use App\Models\Step;
 use Illuminate\Http\Request;
 
@@ -31,9 +32,10 @@ class PostController extends Controller
 
     public function detail($post_id)
     {
-        $detail = Post::with('steps')->select('posts.id', 'posts.target', 'posts.start_date', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
+        $detail = Post::with('steps')->select('posts.id', 'posts.target', 'posts.start_date', 'status.name as status_name', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
         ->join('users', 'posts.user_id', '=', 'users.id')
-        ->join('services', 'posts.service_id', '=', 'services.id')
+            ->join('services', 'posts.service_id', '=', 'services.id')
+            ->join('status', 'posts.status_id', '=', 'status.id')
         ->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
         ->where('posts.id', $post_id)
             ->first();
@@ -63,19 +65,38 @@ class PostController extends Controller
         }
         $qualificationId = Qualification::select('id')->where('name', $request['qualification']);
 
+
+        $service = Service::find($post->service_id);
+        if ($service['name'] !== $request['service']) {
+            Service::insert([
+                'name' => $request['service'],
+            ]);
+        }
+        $serviceId = Service::select('id', 'name')->where('name', $request['service'])->first();
+
+
         foreach ($request['steps'] as $step) {
             $exStep = Step::find($step['id']);
-            if ($exStep !== $step) {
                 $exStep->update([
                     'step_number' => $step['step_number'],
                     'period' => $step['period'],
                     'description' => $step['description'],
                 ]);
             }
-        }
+        // foreach ($request['steps'] as $step) {
+        //     $exStep = Step::find($step->id);
+        //         $exStep->update([
+        //             'step_number' => $step->step_number,
+        //             'period' => $step->period,
+        //             'description' => $step->description,
+        //         ]);
+        //     }
+
 
         $post->update([
             'qualification_id' => $qualificationId,
+            'service_id' => $serviceId['id'],
+            'target' => $request['target'],
             'start_date' => $request['start_date'],
             'description' => $request['description'],
             'updated_at' => now()
