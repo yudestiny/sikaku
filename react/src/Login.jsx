@@ -34,6 +34,8 @@ export function Login() {
         console.log(data)
       setCurrentUser(data.user)
       setUserToken(data.token)
+      })
+      .then(() => {
       navigate("/");
       })
       .catch((error) => {

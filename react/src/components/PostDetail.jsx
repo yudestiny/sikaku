@@ -12,7 +12,7 @@ import 'swiper/css';
 const PostDetail = () => {
   const {id} = useParams();
   const [post,setPost] = useState([]);
-    const { currentUser } = useStateContext();
+    const { currentUser,setCurrentUser,userToken } = useStateContext();
     const navigate = useNavigate();
 
   useEffect (() => {
@@ -184,6 +184,7 @@ const PostDetail = () => {
           </div>
         </div>
 
+      { (userToken && currentUser.id === post.user_id) && (
       <div className="my-6 flex items-center justify-center md:mr-6 md:justify-end gap-x-6">
         <Link to={`/posts/edit/${post.id}`} state={{post:post}}>
           <button type="button" className="rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
@@ -199,6 +200,7 @@ const PostDetail = () => {
           </button>
         </Link>
       </div>
+      )}
     </>
   )
 }

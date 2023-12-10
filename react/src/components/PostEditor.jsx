@@ -13,9 +13,7 @@ const PostEditor = () => {
     const {id} = useParams();
     const [post,setPost] = useState({})
     const navigate = useNavigate();
-  // const location = useLocation();
-  // const post = location.state?.post;
-  //   const { currentUser } = useStateContext();
+    const { currentUser,userToken } = useStateContext();
 
     const [qualification,setQualification] = useState();
     const [target,setTarget] = useState();
@@ -46,9 +44,9 @@ const PostEditor = () => {
         fetchData();
       },[id])
 
-  // useEffect(() => {
-  //   if (!post) return;
-  // },[post])
+    if ( !userToken || currentUser.id !== post.user_id) {
+      navigate("/");
+    }
 
 
   const handleChange = (index,column,value) => {

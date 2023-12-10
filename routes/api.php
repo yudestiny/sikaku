@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\QualificationController;
+use App\Http\Controllers\StatusController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +26,8 @@ Route::post('signup', [AuthController::class, 'signup']);
 Route::post('login', [AuthController::class, 'login']);
 
 Route::get('qualifications', [QualificationController::class, 'index']);
-Route::get('categories', [CategoryController::class, 'home']);
+Route::get('categories', [ CategoryController::class, 'home']);
+Route::get('statuses', [StatusController::class, 'home']);
 Route::get('posts', [PostController::class, 'home']);
 Route::post('posts/create', [PostController::class, 'store']);
 Route::post('posts/index', [PostController::class, 'index']);

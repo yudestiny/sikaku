@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import axiosClient from '../axios';
 
 const StateContext = React.createContext({
         currentUser:{},
@@ -19,6 +20,25 @@ export const ContextProvider = ({ children }) => {
     }
     _setUserToken(token);
   }
+
+  useEffect(() => {
+    if (localStorage.getItem('TOKEN')) {
+      _setUserToken(localStorage.getItem('TOKEN'));
+      const fetchUser = () => {
+        axiosClient.get("/user")
+        .then(res => {
+          setCurrentUser(res.data);
+          // setUserToken(res.data.token.id)
+        })
+        .catch (err => {
+          console.error(err)
+        })
+      };
+      fetchUser();
+    }
+  },[])
+
+
   return (
     <StateContext.Provider value={{
         currentUser,

@@ -12,7 +12,7 @@ import 'swiper/css';
 const PostCreator = () => {
     const [post,setPost] = useState({})
     const navigate = useNavigate();
-  //   const { currentUser } = useStateContext();
+    const { currentUser,userToken } = useStateContext();
 
     const [qualification,setQualification] = useState();
     const [category,setCategory] = useState("");
@@ -20,6 +20,7 @@ const PostCreator = () => {
     const [target,setTarget] = useState("");
     const [startDate,setStartDate] = useState("");
     const [status,setStatus] = useState("");
+    const [statuses,setStatuses] = useState([]);
     const [service,setService] = useState("");
     const [description,setDescription] = useState("");
     const [steps,setSteps] = useState([
@@ -44,12 +45,17 @@ const PostCreator = () => {
     ]);
 
     useEffect(() => {
-      const fetchCategories = async() => {
+      try {
+      const fetchData = async() => {
         const response = await axiosClient.get("categories");
-        console.log(response.data)
+        const responseStatus = await axiosClient.get("statuses")
         setCategories(response.data)
+        setStatuses(responseStatus.data)
       }
-      fetchCategories();
+      fetchData();
+      } catch (err) {
+        console.log(err)
+      }
     },[])
 
   const handleChange = (index,column,value) => {
@@ -58,39 +64,39 @@ const PostCreator = () => {
     setSteps(data);
   }
 
-  const handleChangeDate = (e) => {
+//   const handleChangeDate = (e) => {
 
-  if (e.target.value) {
-    setStartDate(e.target.value);
-  } else {
-    const nowYear = startDate.slice(0, 4);
-    const nowMonth = startDate.substr(5, 2);
-    const nowDate = startDate.slice(-2);
+//   if (e.target.value) {
+//     setStartDate(e.target.value);
+//   } else {
+//     const nowYear = startDate.slice(0, 4);
+//     const nowMonth = startDate.substr(5, 2);
+//     const nowDate = startDate.slice(-2);
 
-    if (nowDate !== "01") {
-      setStartDate(`${nowYear}-${nowMonth}-01`);
-    }
-    else{
-      switch (nowMonth) {
-        case "02":
-          if ((nowYear * 1) % 4 === 0) {
-            setStartDate(`${nowYear}-${nowMonth}-29`);
-          } else {
-            setStartDate(`${nowYear}-${nowMonth}-28`);
-          }
-          break;
-        case "04":
-        case "06":
-        case "09":
-        case "11":
-          setStartDate(`${nowYear}-${nowMonth}-30`);
-          break;
-        default:
-          break;
-      }
-    }
-  }
-}
+//     if (nowDate !== "01") {
+//       setStartDate(`${nowYear}-${nowMonth}-01`);
+//     }
+//     else{
+//       switch (nowMonth) {
+//         case "02":
+//           if ((nowYear * 1) % 4 === 0) {
+//             setStartDate(`${nowYear}-${nowMonth}-29`);
+//           } else {
+//             setStartDate(`${nowYear}-${nowMonth}-28`);
+//           }
+//           break;
+//         case "04":
+//         case "06":
+//         case "09":
+//         case "11":
+//           setStartDate(`${nowYear}-${nowMonth}-30`);
+//           break;
+//         default:
+//           break;
+//       }
+//     }
+//   }
+// }
 
 
   const handleAdd = (index) => {
@@ -160,41 +166,25 @@ const PostCreator = () => {
         console.log(err)
       }
   }
-  console.log(category)
+  console.log(status)
   return (
     <>
       <form >
         <div className="space-y-12 px-6">
           <div className="pb-2">
             <Typography variant='h2' className="text-base font-semibold leading-7 text-gray-900 mb-4">資格取得投稿</Typography>
+            { userToken ? (
+              <>
             <div className='items-center mb-4'>
               <Typography className='items-center'>
                 あなたの資格取得に際した経験を記入してください。
               </Typography>
             </div>
-{/*
-              <div className=" rounded p-2 mb-8 mx-auto px-4 bg-gray-400">
-                <label htmlFor="photo" className="block text-sm font-medium leading-6 ml-2 text-gray-900">
-                  ユーザー名
-                </label>
-                <div className="mt-2 md:flex md:flex-auto items-center gap-x-3">
-                  <div className='w-full mb-3 md:w-1/4 flex'>
-                    <UserCircleIcon className="w-auto h-12 mr-3 text-gray-300" aria-hidden="true" />
-                    <Typography
-                      className="
-                      rounded-md w-32 px-6 p-2 my-1.5  align-baseline items-center text-center justify-center text-sm font-semibold text-gray-900 ring-inset bg-white
-                      "
-                    >
-                      {}
-                    </Typography>
-                  </div>
-                </div>
-              </div> */}
 
               <div className='grid-cols-2'>
                 <div className='col-span- sm:flex'>
                   <div className="sm:w-1/2 mb-8">
-                    <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
+                    <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900 mb-2">
                       取得資格
                     </label>
                     <Select label="資格カテゴリーを選択" onChange={(e) => setCategory(e)}>
@@ -222,11 +212,15 @@ const PostCreator = () => {
                   </div>
 
                   <div className="sm:w-1/2 mb-8">
-                    <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
+                    <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900 mb-2">
                       学習開始前のステータス
                     </label>
                     <div className="mt-2 flex">
-                      <Input value={status} onChange={e => setStatus(e.target.value)} className='mr-4' placeholder='例：まったくの初心者'/>
+                    <Select label="学習開始時の状態を選択" onChange={(e) => setStatus(e)}>
+          { statuses?.map((item) => (
+            <Option key={item.id} value={`${item.id}`}>{item.name}</Option>
+          ))}
+        </Select>
                     </div>
                   </div>
                 </div>
@@ -268,7 +262,7 @@ const PostCreator = () => {
                 <div className='grid lg:grid-cols-2 2xl:grid-cols-3'>
                       {steps?.map((step,index) => {
                         return (
-                          <div className='block -cols-6'>
+                          <div key={step.id} className='block -cols-6'>
                     <div className='flex items-center justify-center'>
                         <div className='col-span-1 items-center flex'>
                       {step.stepNumber !== 1 &&
@@ -281,7 +275,7 @@ const PostCreator = () => {
                             <Input className=''　placeholder='期間' value={step.period} onChange={(e) => handleChange(index,"period",e.target.value)}/>
                           </CardFooter>
                           <CardBody className='py-0 bg-cover'>
-                            <Input placeholder='利用したサービス' variant="h5" value={step.serviceName} onChange={(e) => handleChange(index,"serviceName",e.target.value)} color="blue-gray" className="mb-2"/>
+                            <Input placeholder='利用したサービス' variant="standard" value={step.serviceName} onChange={(e) => handleChange(index,"serviceName",e.target.value)} color="blue-gray" className="mb-2"/>
                             <Textarea placeholder='まとめ、感想' value={step.description} onChange={(e) => handleChange(index,"description",e.target.value)} />
                           </CardBody>
                         <div className='flex justify-center text-center pb-2 gap-4 items-center bg-white'>
@@ -299,8 +293,6 @@ const PostCreator = () => {
   )})}
                 </div>
               </div>
-            </div>
-          </div>
 
         <div className="my-6 flex items-center justify-center md:mr-6 md:justify-end gap-x-6">
           <Link>
@@ -316,6 +308,14 @@ const PostCreator = () => {
               戻る
             </Button>
           </Link>
+            </div>
+            </>
+      ):(
+        <div className='justify-center w-full items-center'>
+          <Typography className='text-center'>投稿機能を利用するにはログインが必要です。</Typography>
+        </div>
+      )}
+          </div>
         </div>
       </form>
     </>

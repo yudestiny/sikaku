@@ -8,6 +8,7 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useStateContext } from "../context/ContextProvider";
 import axiosClient from "../axios";
+import { Link } from "react-router-dom";
 
 function NavList() {
   const { currentUser, setCurrentUser, userToken, setUserToken } = useStateContext();
@@ -28,9 +29,9 @@ function NavList() {
         color="blue-gray"
         className="p-1 font-medium"
       >
-        <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
+        <Link to="#" className="flex items-center hover:text-blue-500 transition-colors">
           Pages
-        </a>
+        </Link>
       </Typography>
       <Typography
         as="li"
@@ -38,9 +39,9 @@ function NavList() {
         color="blue-gray"
         className="p-1 font-medium"
       >
-        <a href="/posts/create" className="flex items-center hover:text-blue-500 transition-colors">
+        <Link to="/posts/create" className="flex items-center hover:text-blue-500 transition-colors">
           新規投稿
-        </a>
+        </Link>
       </Typography>
       {userToken ? (
       <Typography
@@ -49,7 +50,7 @@ function NavList() {
         color="blue-gray"
         className="p-1 font-medium"
       >
-        <a href="/logout" onClick={handleClick} className="flex items-center hover:text-blue-500 transition-colors">
+        <a to="/logout" onClick={handleClick} className="flex items-center hover:text-blue-500 transition-colors">
           ログアウト
         </a>
       </Typography>
@@ -61,9 +62,9 @@ function NavList() {
         color="blue-gray"
         className="p-1 font-medium"
       >
-        <a href="/login" className="flex items-center hover:text-blue-500 transition-colors">
+        <Link to="/login" className="flex items-center hover:text-blue-500 transition-colors">
           ログイン
-        </a>
+        </Link>
       </Typography>
       <Typography
         as="li"
@@ -71,9 +72,9 @@ function NavList() {
         color="blue-gray"
         className="p-1 font-medium"
       >
-        <a href="/signup" className="flex items-center hover:text-blue-500 transition-colors">
+        <Link to="/signup" className="flex items-center hover:text-blue-500 transition-colors">
           新規登録
-        </a>
+        </Link>
       </Typography>
       </>
       )}

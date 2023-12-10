@@ -37,19 +37,17 @@ class PostController extends Controller
     {
 
         $service = Service::CreateOrFirst(['name' => $request['service']]);
-        // $category = Category::CreateOrFirst(['id' => $request['category']]);
         $qualification = Qualification::CreateOrFirst([
             'name' => $request['qualification']
         ],[
             'category_id' => $request['category']
         ]);
-        $status = Status::CreateOrFirst(['name' => $request['status']]);
 
         $post = Post::create([
             'user_id' => Auth::id(),
             'target' => $request['target'],
             'qualification_id' => $qualification->id,
-            'status_id' => $status->id,
+            'status_id' => $request['status'],
             'service_id' => $service->id,
             'start_date' => $request['start_date'],
             'description' => $request['description'],

@@ -34,7 +34,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         $remember = $request['remember'] ?? false;
 
-        if(!Auth::attempt($credentials, $remember)) {
+        if(!Auth::attempt($credentials, true)) {
             return response([
                 'error' => 'The Provided credentials are not correct'
             ], 422);

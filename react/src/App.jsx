@@ -24,6 +24,7 @@ function App() {
           <Route path="posts" element={<Pagination />} />
         </Route>
       </Routes>
+
     </>
   )
 }

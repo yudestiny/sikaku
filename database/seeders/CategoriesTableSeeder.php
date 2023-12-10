@@ -10,7 +10,7 @@ class CategoriesTableSeeder extends Seeder
     public function run()
     {
         // カテゴリを追加
-        $categories = ['IT', '語学', '資格その他'];
+        $categories = ['IT', '語学', 'その他'];
 
         foreach ($categories as $category) {
             DB::table('categories')->insert([
