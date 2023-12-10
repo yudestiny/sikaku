@@ -5,7 +5,7 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import axiosClient from "./axios";
 import { useState } from "react";
 import { useStateContext } from "./context/ContextProvider";
@@ -17,6 +17,7 @@ export function Signup() {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [error, setError] = useState({__html: "", many: {}});
   const { currentUser,setCurrentUser,userToken,setUserToken } = useStateContext();
+  const navigate = useNavigate();
 
   if (userToken) {
     return <Navigate to="/" />;
@@ -31,8 +32,11 @@ export function Signup() {
         password_confirmation:passwordConfirmation
       })
       .then(({data}) => {
+        console.log(data)
       setCurrentUser(data.user)
       setUserToken(data.token)
+      navigate("/");
+
       })
       .catch((error) => {
         if (error.response) {

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Post;
 use App\Models\Qualification;
 use App\Models\Service;
+use App\Models\Status;
 use App\Models\Step;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -30,12 +33,51 @@ class PostController extends Controller
         return $query->paginate(9);
     }
 
+    public function store(Request $request)
+    {
+
+        $service = Service::CreateOrFirst(['name' => $request['service']]);
+        // $category = Category::CreateOrFirst(['id' => $request['category']]);
+        $qualification = Qualification::CreateOrFirst([
+            'name' => $request['qualification']
+        ],[
+            'category_id' => $request['category']
+        ]);
+        $status = Status::CreateOrFirst(['name' => $request['status']]);
+
+        $post = Post::create([
+            'user_id' => Auth::id(),
+            'target' => $request['target'],
+            'qualification_id' => $qualification->id,
+            'status_id' => $status->id,
+            'service_id' => $service->id,
+            'start_date' => $request['start_date'],
+            'description' => $request['description'],
+        ]);
+
+
+        foreach ($request['steps'] as $step) {
+            if (!$step['serviceName'] || !$step['period']) {break;}
+            $service = Service::CreateOrFirst(['name' => $step['serviceName']]);
+            $stepPost = Step::create([
+                'post_id' => $post->id,
+                'step_number' => $step->stepNumber,
+                'service_id' =>$service->id,
+                'period' => $step->period,
+                'description' => $step->description,
+            ]);
+        }
+
+        return response()->json($post);
+
+    }
+
     public function detail($post_id)
     {
-        $detail = Post::with('steps')->select('posts.id', 'posts.target', 'posts.start_date', 'status.name as status_name', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
+        $detail = Post::with('steps')->select('posts.id', 'posts.target', 'posts.start_date', 'statuses.name as status_name', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
         ->join('users', 'posts.user_id', '=', 'users.id')
             ->join('services', 'posts.service_id', '=', 'services.id')
-            ->join('status', 'posts.status_id', '=', 'status.id')
+            ->join('statuses', 'posts.status_id', '=', 'statuses.id')
         ->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
         ->where('posts.id', $post_id)
             ->first();

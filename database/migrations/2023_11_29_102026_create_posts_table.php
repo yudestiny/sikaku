@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('id',36)->primary();
             $table->foreignId('qualification_id')->constrained();
             $table->unsignedBigInteger('status_id');
-            $table->foreign('status_id')->references('id')->on('status');
+            $table->foreign('status_id')->references('id')->on('statuses');
 
             $table->foreignUuId('user_id')->constrained()->onDelete('cascade');
             // $table->foreignId('status_id')->constrained();

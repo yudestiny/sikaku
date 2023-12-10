@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class StatusTableSeeder extends Seeder
+class StatusesTableSeeder extends Seeder
 {
     public function run()
     {
@@ -13,7 +13,7 @@ class StatusTableSeeder extends Seeder
         $statuses = ['知識ゼロ', '少し知っている', '過去に学習経験あり'];
 
         foreach ($statuses as $status) {
-            DB::table('status')->insert([
+            DB::table('statuses')->insert([
                 'name' => $status,
                 'created_at' => now(),
                 'updated_at' => now(),

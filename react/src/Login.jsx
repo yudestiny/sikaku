@@ -9,13 +9,15 @@ import axios from "axios";
 import { useState } from "react";
 import { useStateContext } from "./context/ContextProvider";
 import axiosClient from "./axios";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember,setRemember] = useState(false);
     const [error, setError] = useState({__html: "", many: {}});
   const { currentUser,setCurrentUser,userToken,setUserToken } = useStateContext();
+  const navigate = useNavigate();
 
   if (userToken) {
     return <Navigate to="/" />;
@@ -26,16 +28,22 @@ export function Login() {
       await axiosClient.post('login',{
         email,
         password,
+        remember
       })
       .then(({data}) => {
+        console.log(data)
       setCurrentUser(data.user)
       setUserToken(data.token)
+      navigate("/");
       })
       .catch((error) => {
-        if (error.response) {
+        if (error) {
+          const finalErrors = "ログインに失敗しました";
+        if (error.response.data.errors) {
           const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => [...next, ...accum], [])
-          setError({__html:finalErrors.join('<br>'), many: finalErrors})
         }
+        setError({__html:finalErrors, many: finalErrors})
+      }
         console.error(error)
       })
     }
@@ -95,6 +103,8 @@ export function Login() {
               </a>
             </Typography>
           }
+          checked={remember}
+          onChange={e => setRemember(e.target.checked)}
           containerProps={{ className: "-ml-2.5" }}
         />
         <Button type="submit" className="mt-6" fullWidth>

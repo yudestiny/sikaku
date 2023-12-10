@@ -13,7 +13,7 @@ class PostsTableSeeder extends Seeder
         // 既存のデータをランダムに取得
         $qualifications = DB::table('qualifications')->pluck('id')->toArray();
         $users = DB::table('users')->pluck('id')->toArray();
-        $status = DB::table('status')->pluck('id')->toArray();
+        $status = DB::table('statuses')->pluck('id')->toArray();
         $services = DB::table('services')->pluck('id')->toArray();
 
         // ポストデータを追加

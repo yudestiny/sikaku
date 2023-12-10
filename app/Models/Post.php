@@ -18,10 +18,14 @@ class Post extends Model
      * @var array
      */
     protected $fillable = [
+        'user_id',
+        'qualification_id',
         'favorite_number',
         'start_date',
         'target',
         'description',
+        'service_id',
+        'status_id'
     ];
 
     /**

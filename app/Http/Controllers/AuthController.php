@@ -21,6 +21,8 @@ class AuthController extends Controller
         ]);
         $token = $user->createToken('main')->plainTextToken;
 
+        Auth::login($user);
+
         return response([
             'user' => $user,
             'token' => $token
@@ -29,8 +31,8 @@ class AuthController extends Controller
 
     public function Login(LoginRequest $request)
     {
-        $credentials = $request->validated();
-        $remember = $credentials['remember'] ?? false;
+        $credentials = $request->only('email', 'password');
+        $remember = $request['remember'] ?? false;
 
         if(!Auth::attempt($credentials, $remember)) {
             return response([

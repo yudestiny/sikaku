@@ -14,7 +14,7 @@ function NavList() {
 
   const handleClick = (e) => {
     e.preventDefault()
-    axiosClient.post('logout')
+    axiosClient.post('logout', currentUser)
     .then(response => {
       setCurrentUser({})
       setUserToken(null)

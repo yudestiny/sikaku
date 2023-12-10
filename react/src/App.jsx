@@ -6,8 +6,8 @@ import { Signup } from "./Signup"
 import { Login } from "./Login"
 import { Pagination } from "./components/Pagination"
 import PostDetail from "./components/PostDetail"
-import PostCreation from "./components/PostCreation"
 import PostEditor from "./components/PostEditor"
+import PostCreator from "./components/PostCreator"
 
 function App() {
 
@@ -18,7 +18,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="Signup" element={<Signup />} />
-          <Route path="posts/create" element={<PostCreation />} />
+          <Route path="posts/create" element={<PostCreator />} />
           <Route path="posts/detail/:id" element={<PostDetail />} />
           <Route path="posts/edit/:id" element={<PostEditor />} />
           <Route path="posts" element={<Pagination />} />

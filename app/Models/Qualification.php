@@ -17,7 +17,8 @@ class Qualification extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
+        'category_id'
     ];
 
     /**
@@ -26,7 +27,7 @@ class Qualification extends Model
      * @var array
      */
     protected $casts = [
-        'name' => 'string',
+        'name' => 'string'
     ];
 
     /**
