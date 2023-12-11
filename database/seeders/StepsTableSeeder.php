@@ -29,7 +29,6 @@ $description = "第{$stepNumber}ステップでの振り返り：";
 $description .= $this->generateRandomReflection();
 
 $steps[] = [
-'id' => Str::uuid(),
 'post_id' => $postId,
 'service_id' => $services[array_rand($services)],
 'step_number' => $stepNumber,

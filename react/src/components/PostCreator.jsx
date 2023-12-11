@@ -146,8 +146,10 @@ const PostCreator = () => {
   }
 
   const handlePostConfirm = async() => {
+    localStorage.removeItem('TOKEN')
     try {
       const response = axiosClient.post(`/posts/create`, {
+          id:currentUser?.id,
           qualification,
           category,
           status,
@@ -157,8 +159,8 @@ const PostCreator = () => {
           description,
           steps
         })
-        console.log(response)
         .then(response => {
+          console.log(response)
           const post = response.data;
           navigate(`/posts/detail/${post.id}`);
         })

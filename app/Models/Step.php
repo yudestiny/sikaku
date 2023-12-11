@@ -20,7 +20,9 @@ class Step extends Model
         'name',
         'step_number',
         'period',
-        'description'
+        'description',
+        'post_id',
+        'service_id'
     ];
 
     /**

@@ -44,7 +44,7 @@ class PostController extends Controller
         ]);
 
         $post = Post::create([
-            'user_id' => Auth::id(),
+            'user_id' => $request['id'],
             'target' => $request['target'],
             'qualification_id' => $qualification->id,
             'status_id' => $request['status'],
@@ -53,16 +53,29 @@ class PostController extends Controller
             'description' => $request['description'],
         ]);
 
+        // $post = new Post;
+        // $post->user_id = $request['id'];
+        // $post->target = $request['target'];
+        // $post->qualification_id = $qualification['id'];
+        // $post->status_id = $request['status'];
+        // $post->service_id = $service['id'];
+        // $post->start_date = $request['start_date'];
+        // $post->description = $request['description'];
+        // $post->save();
+
+        // $postId = $post->id;
+
+
 
         foreach ($request['steps'] as $step) {
             if (!$step['serviceName'] || !$step['period']) {break;}
             $service = Service::CreateOrFirst(['name' => $step['serviceName']]);
             $stepPost = Step::create([
                 'post_id' => $post->id,
-                'step_number' => $step->stepNumber,
+                'step_number' => $step['stepNumber'],
                 'service_id' =>$service->id,
-                'period' => $step->period,
-                'description' => $step->description,
+                'period' => $step['period'],
+                'description' => $step['description'],
             ]);
         }
 
