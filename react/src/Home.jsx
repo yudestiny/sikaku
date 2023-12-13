@@ -14,10 +14,13 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosClient.get("qualifications");
-        const postResponse = await axiosClient.get("posts");
-        const categoryResponse = await axiosClient.get("categories");
-        console.log(categoryResponse)
+        // const response = await axiosClient.get("qualifications");
+        const [response,postResponse,categoryResponse] = await Promise.all([
+          axiosClient.get("qualificationRank"),
+          axiosClient.get("posts"),
+          axiosClient.get("categories")
+        ]);
+        console.log(response)
         setQualifications(response.data);
         setPosts(postResponse.data);
         setCategories(categoryResponse.data);

@@ -8,6 +8,7 @@ import { Pagination } from "./components/Pagination"
 import PostDetail from "./components/PostDetail"
 import PostEditor from "./components/PostEditor"
 import PostCreator from "./components/PostCreator"
+import Favorites from "./components/Favorites"
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="Signup" element={<Signup />} />
+          <Route path="favorite" element={<Favorites />} />
           <Route path="posts/create" element={<PostCreator />} />
           <Route path="posts/detail/:id" element={<PostDetail />} />
           <Route path="posts/edit/:id" element={<PostEditor />} />

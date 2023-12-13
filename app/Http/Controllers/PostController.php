@@ -11,12 +11,24 @@ use App\Models\Status;
 use App\Models\Step;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
-    public function home ()
+    public function home()
     {
         return Post::select('posts.id', 'posts.target', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')->join('users', 'posts.user_id', '=', 'users.id')->join('services', 'posts.service_id', '=', 'services.id')->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')->limit(5)->get();
+
+    }
+    public function getQualificationRanking()
+    {
+        return Post::join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
+        ->select('qualifications.id', 'qualifications.name', DB::raw('count(posts.qualification_id) as count'))
+            ->groupBy('qualifications.id')
+            ->groupBy('qualifications.name')
+        ->limit(9)
+        ->orderBy('count', 'desc')
+        ->get();
     }
 
     public function index(Request $request)

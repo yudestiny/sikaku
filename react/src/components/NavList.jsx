@@ -44,16 +44,28 @@ function NavList() {
         </Link>
       </Typography>
       {userToken ? (
+        <>
       <Typography
         as="li"
         variant="small"
         color="blue-gray"
         className="p-1 font-medium"
       >
-        <a to="/logout" onClick={handleClick} className="flex items-center hover:text-blue-500 transition-colors">
-          ログアウト
-        </a>
+        <Link to="/favorite" className="flex items-center hover:text-blue-500 transition-colors">
+          お気に入り
+        </Link>
       </Typography>
+      <Typography
+        as="li"
+        variant="small"
+        color="blue-gray"
+        className="p-1 font-medium"
+      >
+        <Link to="/logout" onClick={handleClick} className="flex items-center hover:text-blue-500 transition-colors">
+          ログアウト
+        </Link>
+      </Typography>
+      </>
       ) : (
         <>
       <Typography

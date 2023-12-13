@@ -78,4 +78,10 @@ class Post extends Model
         return $this->hasMany(Step::class, 'post_id', 'id')->leftJoin('services', 'steps.service_id', '=', 'services.id')
             ->orderBy('step_number');
     }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class, 'post_id', 'id');
+    }
+
 }
