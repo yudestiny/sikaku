@@ -27,9 +27,9 @@ function NavList() {
         as="li"
         variant="small"
         color="blue-gray"
-        className="p-1 font-medium"
+        className="p-1 font-medium lg:text-md"
       >
-        <Link to="#" className="flex items-center hover:text-blue-500 transition-colors">
+        <Link to="#" className="flex items-center hover:text-gray-600 transition-colors">
           Pages
         </Link>
       </Typography>
@@ -37,9 +37,9 @@ function NavList() {
         as="li"
         variant="small"
         color="blue-gray"
-        className="p-1 font-medium"
+        className="p-1 font-medium lg:text-md"
       >
-        <Link to="/posts/create" className="flex items-center hover:text-blue-500 transition-colors">
+        <Link to="/posts/create" className="flex items-center hover:text-gray-600 transition-colors">
           新規投稿
         </Link>
       </Typography>
@@ -49,9 +49,9 @@ function NavList() {
         as="li"
         variant="small"
         color="blue-gray"
-        className="p-1 font-medium"
+        className="p-1 font- lg:text-md"
       >
-        <Link to="/favorite" className="flex items-center hover:text-blue-500 transition-colors">
+        <Link to="/favorite" className="flex items-center hover:text-gray-600 transition-colors">
           お気に入り
         </Link>
       </Typography>
@@ -59,9 +59,9 @@ function NavList() {
         as="li"
         variant="small"
         color="blue-gray"
-        className="p-1 font-medium"
+        className="p-1 font-medium lg:text-md"
       >
-        <Link to="/logout" onClick={handleClick} className="flex items-center hover:text-blue-500 transition-colors">
+        <Link to="/logout" onClick={handleClick} className="flex items-center hover:text-gray-600 transition-colors">
           ログアウト
         </Link>
       </Typography>
@@ -115,7 +115,7 @@ export function NavbarSimple() {
           as="a"
           href="/"
           variant="h6"
-          className="mr-4 cursor-pointer py-1.5"
+          className="mr-4 cursor-pointer py-1.5 lg:text-2xl"
         >
           sikaku
         </Typography>

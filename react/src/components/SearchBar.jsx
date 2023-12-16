@@ -15,7 +15,7 @@ const SearchBar = ({categories}) => {
     }
   return (
     <form onSubmit={handleSubmit}>
-      <div className="w-72 mb-8">
+      <div className="w-72 mb-8  py-12 sm:py-18">
         <Select label="資格カテゴリーを選択" onChange={(e) => setCategory(e)}>
           { categories?.map((item) => (
             <Option key={item.id} value={`${item.id}`}>{item.name}</Option>

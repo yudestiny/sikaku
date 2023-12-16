@@ -33,14 +33,14 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
+    <div className='w-full'>
     <TopPage qualifications={qualifications} />
-    <div className='grid grid-cols-5'>
-      <div className='col-span-4'>
-        <HomePosts posts={posts} />
-      </div>
-      <div className='col-span-1 mr-4'>
+    <div className='grid xl:flex xl:grid-cols-4'>
+      <div className='xl:col-span-1 xl:mr-4'>
         <SearchBar categories={categories} />
+      </div>
+      <div className='xl:col-span-3'>
+        <HomePosts posts={posts} />
       </div>
     </div>
     </div>
