@@ -38,6 +38,10 @@ class Post extends Model
         'id' => 'string',
     ];
 
+    protected $date = [
+        'created_at'
+    ];
+
     /**
      * Get the user that owns the post.
      */

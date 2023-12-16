@@ -1,25 +1,5 @@
 import { Typography } from "@material-tailwind/react"
-
-const posts = [
-  {
-    id: 1,
-    title: 'Boost your conversion rate',
-    href: '#',
-    description:
-      'Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.',
-    date: 'Mar 16, 2020',
-    datetime: '2020-03-16',
-    category: { title: 'Marketing', href: '#' },
-    author: {
-      name: 'Michael Foster',
-      role: 'Co-Founder / CTO',
-      href: '#',
-      imageUrl:
-        'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-  },
-  // More posts...
-]
+import { Link } from "react-router-dom"
 
 export default function HomePosts({posts}) {
 
@@ -68,11 +48,11 @@ export default function HomePosts({posts}) {
         </div>
       </div>
     <div className="items-center">
-      <Typography
-          as="a"
-          href="posts"
-          variant="h6"
-          className="mr-4 cursor-pointer py-1.5 text-right">もっと見る→</Typography>
+      <Link to="/posts">
+        <Typography
+            variant="h6"
+            className="mr-4 cursor-pointer py-1.5 text-right">もっと見る→</Typography>
+      </Link>
     </div>
     </div>
   )

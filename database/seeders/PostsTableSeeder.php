@@ -27,11 +27,11 @@ class PostsTableSeeder extends Seeder
                 'status_id' => $status[array_rand($status)],
                 'service_id' => $services[array_rand($services)],
                 'favorite_number' => rand(1, 20),
-                'start_date' => now()->subDays(rand(1, 365)),
+                'start_date' => now()->subDays(rand(1, 365))->format('Y-m-d'),
                 'target' => $this->generateRandomTarget(),
                 'description' => $this->generateRandomDescription(),
-                'created_at' => now()->subDays(rand(1, 365)),
-                'updated_at' => now(),
+                'created_at' => now()->subDays(rand(1, 365))->format('Y-m-d H:i:s'),
+                'updated_at' => now()->format('Y-m-d H:i:s'),
             ];
         }
 

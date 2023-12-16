@@ -17,8 +17,13 @@ class PostController extends Controller
 {
     public function home()
     {
-        return Post::select('posts.id', 'posts.target', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')->join('users', 'posts.user_id', '=', 'users.id')->join('services', 'posts.service_id', '=', 'services.id')->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')->limit(5)->get();
+        $posts = Post::select('posts.id', 'posts.target', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')->join('users', 'posts.user_id', '=', 'users.id')->join('services', 'posts.service_id', '=', 'services.id')->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')->limit(5)->get();
 
+        foreach ($posts as $post) {
+            $post->created_at = substr($post->created_at->format('Y-m-d'), 0, 10);
+        }
+
+        return $posts;
     }
     public function getQualificationRanking()
     {
@@ -97,7 +102,7 @@ class PostController extends Controller
 
     public function detail($post_id)
     {
-        $detail = Post::with('steps')->select('posts.id', 'posts.target', 'posts.start_date', 'statuses.name as status_name', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
+        $detail = Post::with('steps')->select('posts.id', 'users.id as user_id', 'posts.target', 'posts.start_date', 'statuses.name as status_name', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
         ->join('users', 'posts.user_id', '=', 'users.id')
             ->join('services', 'posts.service_id', '=', 'services.id')
             ->join('statuses', 'posts.status_id', '=', 'statuses.id')

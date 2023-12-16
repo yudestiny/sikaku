@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axiosClient from '../axios'
 import { Form, Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeftCircleIcon, ArrowLeftIcon, ArrowRightCircleIcon, ArrowRightIcon, MinusIcon, PhotoIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftCircleIcon, ArrowLeftIcon, ArrowRightCircleIcon, ArrowRightIcon, ArrowUpCircleIcon, MinusIcon, PhotoIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { Button, Card, CardBody, CardFooter, CardHeader, Input, Textarea, Typography } from '@material-tailwind/react'
 import { useStateContext } from '../context/ContextProvider'
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -27,15 +27,19 @@ const PostEditor = () => {
         const fetchData = async() => {
           try {
             const response = await axiosClient.get(`posts/detail/${id}`);
-            const data = response.data;
-            setPost(data);
-    setQualification(data.qualification_name);
-    setTarget(data.target);
-    setStartDate(data.start_date);
-    setStatus(data.status_name);
-    setService(data.service_name);
-    setDescription(data.description);
-    setSteps(data.steps);
+            const pos = response.data;
+            pos.created_at = pos.created_at.substring(0,10);
+            pos.updated_at = pos.updated_at.substring(0,10);
+            pos.start_date = pos.start_date.substring(0,10);
+            setPost(pos);
+    setQualification(pos.qualification_name);
+    setTarget(pos.target);
+    setStartDate(pos.start_date);
+    setStatus(pos.status_name);
+    setService(pos.service_name);
+    setDescription(pos.description);
+    setSteps(pos.steps);
+
 
           } catch (err) {
             console.log(err);
@@ -176,7 +180,7 @@ const PostEditor = () => {
                       学習開始時期
                     </label>
                     <div className="mt-2 flex">
-                      <Input type='date' value={startDate} onChange={e => setStartDate(e.target.value)} className='mr-4'/>
+                      <Input type='date' value={startDate} onChange={e => setStartDate(e.target.value)} className='mr-4' placeholder={`例：${startDate}`} />
                     </div>
                   </div>
 
@@ -230,9 +234,12 @@ const PostEditor = () => {
                           <div className='block -cols-6'>
                     <div className='flex items-center justify-center'>
                         <div className='col-span-1 items-center flex'>
-                      {step.step_number !== 1 &&
+                      {step.step_number !== 1 && (window.innerWidth >= 960 ? (
                           <ArrowLeftCircleIcon className='w-6 hover:text-gray-700' onClick={() => handleLeft(index)} />
-                        }
+                      ):(
+                          <ArrowUpCircleIcon className='w-6 hover:text-gray-700' onClick={() => handleLeft(index)} />
+                      )
+                        )}
                         </div>
                         <Card className="col-span-4 mt-6 mx-4 pt-3 shadow-2xl mb-2">
                           <CardFooter className="flex pb-3 pt-0 mb-0">

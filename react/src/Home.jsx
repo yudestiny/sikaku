@@ -22,7 +22,11 @@ const Home = () => {
         ]);
         console.log(response)
         setQualifications(response.data);
-        setPosts(postResponse.data);
+        const pos = postResponse.data
+        pos.forEach(p => {
+          p.created_at = p.created_at.substring(0,10);
+        })
+        setPosts(pos);
         setCategories(categoryResponse.data);
       } catch (err) {
         console.log(err);

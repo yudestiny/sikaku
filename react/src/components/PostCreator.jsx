@@ -168,7 +168,7 @@ const PostCreator = () => {
         console.log(err)
       }
   }
-  console.log(status)
+  console.log(currentUser)
   return (
     <>
       <form >
@@ -265,8 +265,8 @@ const PostCreator = () => {
                       {steps?.map((step,index) => {
                         return (
                           <div key={step.id} className='block -cols-6'>
-                    <div className='flex items-center justify-center'>
-                        <div className='col-span-1 items-center flex'>
+                    <div className='block sm:flex items-center justify-center'>
+                        <div className='col-span-1 items-center justify-center flex'>
                       {step.stepNumber !== 1 &&
                           <ArrowLeftCircleIcon className='w-6 hover:text-gray-700' onClick={() => handleLeft(index)} />
                         }
@@ -285,7 +285,7 @@ const PostCreator = () => {
                           <MinusIcon className='w-6 rounded-full hover:bg-blue-500 items-center justify-center text-center block' onClick={() => handleDelete(index)}/>
                         </div>
                         </Card>
-                        <div className='grid-item col-span-1 items-center flex'>
+                        <div className='grid-item col-span-1 items-center justify-center flex'>
                       {step.stepNumber !== steps.length  &&
                           <ArrowRightCircleIcon className='w-6 hover:text-gray-700' onClick={() => handleRight(index)} />
                         }
