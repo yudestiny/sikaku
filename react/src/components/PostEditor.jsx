@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axiosClient from '../axios'
 import { Form, Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeftCircleIcon, ArrowLeftIcon, ArrowRightCircleIcon, ArrowRightIcon, ArrowUpCircleIcon, MinusIcon, PhotoIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import { ArrowDownCircleIcon, ArrowLeftCircleIcon, ArrowLeftIcon, ArrowRightCircleIcon, ArrowRightIcon, ArrowUpCircleIcon, MinusIcon, PhotoIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { Button, Card, CardBody, CardFooter, CardHeader, Input, Textarea, Typography } from '@material-tailwind/react'
 import { useStateContext } from '../context/ContextProvider'
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -22,6 +22,22 @@ const PostEditor = () => {
     const [service,setService] = useState();
     const [description,setDescription] = useState();
     const [steps,setSteps] = useState();
+
+  const [arrowHorizon, setArrowHorizon] = useState(false);
+
+  const handleWindowResize = () =>{
+    window.innerWidth >= 960 ? (setArrowHorizon(true)):(
+      setArrowHorizon(false)
+    );
+}
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
+
 
       useEffect (() => {
         const fetchData = async() => {
@@ -231,23 +247,26 @@ const PostEditor = () => {
                 <div className='grid lg:grid-cols-2 2xl:grid-cols-3'>
                       {steps?.map((step,index) => {
                         return (
-                          <div className='block -cols-6'>
-                    <div className='flex items-center justify-center'>
-                        <div className='col-span-1 items-center flex'>
-                      {step.step_number !== 1 && (window.innerWidth >= 960 ? (
+                          <div className='block'>
+                    <div className='block lg:flex items-center justify-center mb-4'>
+                        <div className='col-span-1 items-center justify-center flex'>
+                      { index !== 0 && (arrowHorizon ? (
                           <ArrowLeftCircleIcon className='w-6 hover:text-gray-700' onClick={() => handleLeft(index)} />
                       ):(
                           <ArrowUpCircleIcon className='w-6 hover:text-gray-700' onClick={() => handleLeft(index)} />
                       )
                         )}
                         </div>
-                        <Card className="col-span-4 mt-6 mx-4 pt-3 shadow-2xl mb-2">
+                        <Card className=" lg:mt-6 mx-4 pt-3 shadow-2xl rounded-lg my-2">
                           <CardFooter className="flex pb-3 pt-0 mb-0">
-                            <Typography className='text-center items-center py-2 mr-3 justify-center text-md'>STEP<span className='rounded-md '>{step.step_number}</span></Typography>
+                            <Typography className='text-center font-bold items-center py-2 mr-3 justify-center text-md'>STEP<span className='rounded-md '>{step.step_number}</span></Typography>
                             <Input className='' value={step.period} onChange={(e) => handleChange(index,"period",e.target.value)}/>
                           </CardFooter>
-                          <CardBody className='py-0 bg-cover'>
-                            <Input variant="h5" value={step.name} onChange={(e) => handleChange(index,"name",e.target.value)} color="blue-gray" className="mb-2"/>
+                          <CardBody className='py-0 gap-y-5 bg-cover items-stretch'>
+                            <div className='mb-2 flex items-center gap-x-3 whitespace-nowrap'>
+                              <Typography className='flex-nowrap mx-auto text-sm tracking-tight'>利用したサービス</Typography>
+                              <Input variant="h5" value={step.name} onChange={(e) => handleChange(index,"name",e.target.value)} color="blue-gray" className="mx-auto"/>
+                            </div>
                             <Textarea value={step.description} onChange={(e) => handleChange(index,"description",e.target.value)} />
                           </CardBody>
                         <div className='flex justify-center text-center pb-2 gap-4 items-center bg-white'>
@@ -255,10 +274,13 @@ const PostEditor = () => {
                           <MinusIcon className='w-6 rounded-full hover:bg-blue-500 items-center justify-center text-center block' onClick={() => handleDelete(index)}/>
                         </div>
                         </Card>
-                        <div className='grid-item col-span-1 items-center flex'>
-                      {step.step_number !== steps.length  &&
+                        <div className='grid-item col-span-1 items-center justify-center flex'>
+                      {step.step_number !== steps.length  && (arrowHorizon ? (
                           <ArrowRightCircleIcon className='w-6 hover:text-gray-700' onClick={() => handleRight(index)} />
-                        }
+                      ):(
+                          <ArrowDownCircleIcon className='w-6 hover:text-gray-700' onClick={() => handleRight(index)} />
+                      )
+                        )}
                         </div>
                     </div>
                           </div>
