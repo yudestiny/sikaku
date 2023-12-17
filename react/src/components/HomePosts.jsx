@@ -11,7 +11,7 @@ export default function HomePosts({posts}) {
   }
 
   return (
-    <div className="bg-gray-100 py-8 m-2">
+    <div className="bg-gray-100 py-8 m-2 justify-center">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 mb-4">
         <div className="mx-auto max-w-2xl lg:mx-0">
           <div className="flex gap-x-2">
@@ -25,13 +25,13 @@ export default function HomePosts({posts}) {
             あなたがやることは勉強時間の確保だけ、<br />人生を変えよう
           </p>
         </div>
-        <div className="mx-auto  grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 mt-4 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-3 justify-center">
+        <div className="mx-auto  grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 mt-4 pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-2 2xl:grid-cols-3 justify-center">
           {posts.map((post) => (
-            <article key={post.id} className="flex max-w-xl flex-col justify-center relative bg-white shadow p-3">
+            <article key={post.id} className="flex max-w-xl flex-col justify-center relative bg-white shadow p-3 items-stretch text-">
               { judgeIsNew(post.created_at) && (
               <Chip color="amber" value="new" className="text-white absolute -top-1 -right-1 " />
               )}
-              <div className="flex items-center gap-x-4 text-xs">
+              <div className="flex gap-x-4 text-xs">
                 <time dateTime={post.created_at} className="text-gray-500">
                   {post.created_at}
                 </time>
@@ -52,7 +52,7 @@ export default function HomePosts({posts}) {
                 </div>
                 <div className="text-end mr-4">
                   <Link to={`/posts/detail/${post.id}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 hover:text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 hover:text-gray-400 absolute bottom-2 right-4">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
                     </svg>
                   </Link>

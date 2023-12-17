@@ -5,6 +5,7 @@ import TopPage from './components/ListItem'
 import axiosClient from './axios'
 import HomePosts from './components/HomePosts'
 import SearchBar from './components/SearchBar'
+import Description from './components/Description'
 
 const Home = () => {
   const [qualifications,setQualifications] = useState([]);
@@ -17,7 +18,7 @@ const Home = () => {
         // const response = await axiosClient.get("qualifications");
         const [response,postResponse,categoryResponse] = await Promise.all([
           axiosClient.get("qualificationRank"),
-          axiosClient.get("posts"),
+          axiosClient.get("posts/new"),
           axiosClient.get("categories")
         ]);
         console.log(response)
@@ -39,13 +40,16 @@ const Home = () => {
   return (
     <div className='w-full'>
     <TopPage qualifications={qualifications} />
-    <div className='grid xl:flex xl:grid-cols-5'>
-      <div className='w-full xl:col-span-1 xl:mr-4'>
+    <div className='grid justify-center xl:justify-between xl:flex xl:grid-cols-5'>
+      <aside className='xl:col-span-1'>
         <SearchBar categories={categories} />
-      </div>
-      <div className='xl:col-span-3 justify-between'>
+      </aside>
+      <div className='xl:col-span-3 justify-'>
         <HomePosts posts={posts} />
       </div>
+      <aside className='xl:col-span-1'>
+        <Description />
+      </aside>
     </div>
     </div>
   )
