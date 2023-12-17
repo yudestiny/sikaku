@@ -34,7 +34,7 @@ Route::get('statuses', [StatusController::class, 'home']);
 
 Route::get('posts', [PostController::class, 'home']);
 Route::post('posts/create', [PostController::class, 'store']);
-Route::post('posts/index', [PostController::class, 'index']);
+Route::get('posts/index', [PostController::class, 'index']);
 Route::get('posts/detail/{post_id}', [PostController::class, 'detail']);
 Route::put('posts/{post_id}', [PostController::class, 'update']);
 Route::delete('posts/{post_id}', [PostController::class, 'destroy']);

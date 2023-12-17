@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Favorite;
 use App\Models\Post;
 use App\Models\Qualification;
 use App\Models\Service;
@@ -38,16 +39,24 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
-        $query = Post::join('users', 'posts.user_id', '=', 'users.id')
+        $query = Post::with('favorites')->join('users', 'posts.user_id', '=', 'users.id')
         ->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
         ->join('categories', 'qualifications.category_id', '=', 'categories.id')
         ->select('posts.id', 'posts.target', 'users.name as user_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description', 'categories.id as category_id');
 
         if (!is_null($request['category'])) {
-            return $query->where('categories.id', '=', $request['category'])->paginate(9);
+            $query = $query->where('categories.id', '=', $request['category']);
+        }
+        if (!is_null($request['qualification'])) {
+            $query = $query->where('qualifications.id', '=', $request['qualification']);
         }
 
         return $query->paginate(9);
+
+        // foreach ($query as $q) {
+        //     $favorites = Favorite::select(DB::raw('count(favorites.post_id) as count'))
+        //     ->where('favorites.post_id', $q->id)->get();
+        // }
     }
 
     public function store(Request $request)
@@ -153,14 +162,6 @@ class PostController extends Controller
                     'description' => $step['description'],
                 ]);
             }
-        // foreach ($request['steps'] as $step) {
-        //     $exStep = Step::find($step->id);
-        //         $exStep->update([
-        //             'step_number' => $step->step_number,
-        //             'period' => $step->period,
-        //             'description' => $step->description,
-        //         ]);
-        //     }
 
 
         $post->update([

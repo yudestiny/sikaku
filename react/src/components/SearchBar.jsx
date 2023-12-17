@@ -5,12 +5,12 @@ import { useNavigate } from 'react-router-dom'
 const SearchBar = ({categories}) => {
     const [category,setCategory] = useState();
     const navigate = useNavigate();
-    const handleSubmit = () => {
-      try {
-        navigate("/posts",{state:{category}})
-      } catch (err) {
-        console.log(err)
-      }
+    const handleSubmit = async() => {
+        try {
+          navigate("/posts",{state:{category:category}})
+        } catch (err) {
+          console.log(err)
+        }
 
     }
   return (

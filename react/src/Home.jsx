@@ -39,11 +39,11 @@ const Home = () => {
   return (
     <div className='w-full'>
     <TopPage qualifications={qualifications} />
-    <div className='grid xl:flex xl:grid-cols-4'>
-      <div className='xl:col-span-1 xl:mr-4'>
+    <div className='grid xl:flex xl:grid-cols-5'>
+      <div className='w-full xl:col-span-1 xl:mr-4'>
         <SearchBar categories={categories} />
       </div>
-      <div className='xl:col-span-3'>
+      <div className='xl:col-span-3 justify-between'>
         <HomePosts posts={posts} />
       </div>
     </div>

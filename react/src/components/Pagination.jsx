@@ -7,17 +7,17 @@ import Posts from "../Posts";
 
 export function Pagination() {
   const [active, setActive] = React.useState(1);
-  const [ posts, setPosts ] = useState([]);
-
   const location = useLocation()
-  const [selectCategory, setSelectCategory] = useState(location.state)
+    const [ posts, setPosts ] = useState([]);
+  const state = location.state;
+  const [selectCategory, setSelectCategory] = useState()
 
 
   useEffect (() => {
     const fetchData = async() => {
       try {
         console.log(selectCategory)
-        const response = await axiosClient.post(`posts/index`,selectCategory);
+        const response = await axiosClient.get(`posts/index`,{params:state});
         console.log(response)
         setPosts(response.data);
       } catch (err) {
@@ -30,7 +30,7 @@ export function Pagination() {
   const handleClick = async(index) => {
     setActive(index);
       try {
-        const response = await axiosClient.post(`posts/index/?page=${index}`,selectCategory);
+        const response = await axiosClient.get(`posts/index/?page=${index}`,{params:state});
         console.log(response);
         setPosts(response.data);
       } catch (err) {
@@ -51,7 +51,7 @@ export function Pagination() {
     if (active === posts.last_page) return;
 
     try {
-      const response = await axiosClient.post(`posts/index/?page=${posts.current_page + 1}`,selectCategory);
+      const response = await axiosClient.get(`posts/index/?page=${posts.current_page + 1}`,{params:state});
       console.log(response);
       setPosts(response.data);
     } catch (err) {
@@ -64,7 +64,7 @@ export function Pagination() {
     if (active === 1) return;
 
     try {
-      const response = await axiosClient.post(`posts/index/?page=${posts.current_page - 1}`,selectCategory);
+      const response = await axiosClient.get(`posts/index/?page=${posts.current_page - 1}`,{params:state});
       console.log(response);
       setPosts(response.data);
     } catch (err) {
@@ -82,7 +82,7 @@ const  page = () => {
 
   return (
     <>
-    <Posts posts={posts} category={selectCategory} />
+    <Posts posts={posts} />
     <div className="flex justify-center items-center gap-4">
       <Button
         variant="text"
