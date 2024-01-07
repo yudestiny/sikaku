@@ -22,7 +22,7 @@ class PostController extends Controller
 
         foreach ($posts as $post) {
             $post->created_at = substr($post->created_at->format('Y-m-d'), 0, 10);
-        }
+              }
 
         return $posts;
     }
