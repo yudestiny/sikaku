@@ -28,7 +28,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION : ${{ secrets.AWS_DEFAULT_REGION  }}
           AWS_EC2_METADATA_DISABLED: ${{ secrets.AWS_EC2_METADATA_DISABLED }}
-        run: aws s3 cp --recursive --region ap-northeast-1 build s3://bucket-sikaku-react
+        run: aws s3 sync --exact-timestamps --delete dist s3://bucket-sikaku-react
 
       - name: make invalidation to cloudfront
         uses: chetan/invalidate-cloudfront-action@master
