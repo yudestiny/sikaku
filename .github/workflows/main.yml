@@ -10,9 +10,12 @@ jobs:
       run:
         working-directory: react
     steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '18'
       - name: Checkout
         uses: actions/checkout@master  # リポジトリをチェックアウト
-
+        
       - name: Install Dependencies
         run: npm install
 
@@ -26,3 +29,12 @@ jobs:
           AWS_DEFAULT_REGION : ${{ secrets.AWS_DEFAULT_REGION  }}
           AWS_EC2_METADATA_DISABLED: ${{ secrets.AWS_EC2_METADATA_DISABLED }}
         run: aws s3 sync --exact-timestamps --delete . s3://bucket-sikaku-react
+
+      - name: make invalidation to cloudfront
+        uses: chetan/invalidate-cloudfront-action@master
+        env:
+          DISTRIBUTION: ${{ secrets.DISTRIBUTION_MAIN }}
+          PATHS: '/*'
+          AWS_DEFAULT_REGION : ${{ secrets.AWS_DEFAULT_REGION  }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
