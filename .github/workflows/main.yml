@@ -22,13 +22,13 @@ jobs:
       - name: Build
         run: npm run build  # React ビルド
 
-      # - name: Deploy  # S3にデプロイ 
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     AWS_DEFAULT_REGION : ${{ secrets.AWS_DEFAULT_REGION  }}
-      #     AWS_EC2_METADATA_DISABLED: ${{ secrets.AWS_EC2_METADATA_DISABLED }}
-      #   run: aws s3 sync --exact-timestamps --delete . s3://bucket-sikaku-react
+      - name: Deploy  # S3にデプロイ 
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION : ${{ secrets.AWS_DEFAULT_REGION  }}
+          AWS_EC2_METADATA_DISABLED: ${{ secrets.AWS_EC2_METADATA_DISABLED }}
+        run: aws s3 sync --exact-timestamps --delete . s3://bucket-sikaku-react
 
       - name: make invalidation to cloudfront
         uses: chetan/invalidate-cloudfront-action@master
