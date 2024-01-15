@@ -39,18 +39,18 @@ const Home = () => {
 
   return (
     <div className='w-full'>
-    <TopPage qualifications={qualifications} />
-    <div className='grid justify-center xl:justify-between xl:flex xl:grid-cols-5'>
-      <aside className='xl:col-span-1'>
-        <SearchBar categories={categories} />
-      </aside>
-      <div className='xl:col-span-3 justify-'>
-        <HomePosts posts={posts} />
+      <TopPage qualifications={qualifications} />
+      <div className='grid justify-center xl:justify-between xl:flex xl:grid-cols-5'>
+        <aside className=''>
+          <SearchBar categories={categories} />
+        </aside>
+        <div className=' justify-'>
+          <HomePosts posts={posts} />
+        </div>
+        <aside className='flex justify-center'>
+          <Description />
+        </aside>
       </div>
-      <aside className='xl:col-span-1'>
-        <Description />
-      </aside>
-    </div>
     </div>
   )
 }

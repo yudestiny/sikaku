@@ -6,7 +6,9 @@ import { Button, Card, CardBody, CardFooter, CardHeader, Typography } from '@mat
 import { useStateContext } from '../context/ContextProvider'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-
+import StepSwiper from './StepSwiper'
+// import { Navigation } from 'swiper'     //追記
+// import 'swiper/css/navigation'          //追記
 
 
 const PostDetail = () => {
@@ -69,7 +71,6 @@ const PostDetail = () => {
   }
 
   console.log(currentUser)
-  console.log(post)
   return (
     <>
       <div className="space-y-12 px-6">
@@ -152,67 +153,12 @@ const PostDetail = () => {
               </div>
             </div>
 
-            <div className="col-span-full mb-8">
+            <div className="w-full mb-8">
               <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
                 学習ステップ
               </label>
-              <div className=''>
-                <Swiper
-      spaceBetween={50}
-      slidesPerView={3}
-      onSlideChange={() => console.log('slide change')}
-      onSwiper={(swiper) => console.log(swiper)}
-      breakpoints={{
-        320: {
-      slidesPerView: 1,
-      spaceBetween: 10,
-        },
-        720: {
-      slidesPerView: 2,
-      spaceBetween: 10,
-        },
-        1080: {
-      slidesPerView: 3,
-      spaceBetween: 20,
-        },
-        1480: {
-      slidesPerView: 4,
-      spaceBetween: 30,
-        },
-        1680: {
-      slidesPerView: 5,
-      spaceBetween: 30,
-        },
-      }}
-      className=''
-    >
-                    {post.steps?.map((step,index) => {
-                      return (
-                  <div key={index}>
-                    <SwiperSlide className='w-auto container grid grid-cols-6 items-center justify-center mx-auto gap-x-6'>
-
-                    {/* {step.step_number !== 1 &&
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="flex w-6 h-6 col-span-1">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
-                      </svg>} */}
-                      <Card className="cols-span-5 mt-6 mr-4 w-80 pt-3 shadow-2xl mb-8">
-                        <CardFooter className="flex pb-3 pt-0 mb-0">
-                          <Typography className='text-center items-center py-2 mr-3 justify-center text-md font-extrabold text-black'>STEP<span className=''>{step.step_number}</span></Typography>
-                          <Button disabled className='bg-black px-3 rounded-full'>{step.period}</Button>
-                        </CardFooter>
-                        <CardBody className='pt-0'>
-                          <Typography variant="h5" color="blue-gray" className="mb-2">
-                            {step.name}
-                          </Typography>
-                          <Typography>
-                            {step.description}
-                          </Typography>
-                        </CardBody>
-                      </Card>
-                    </SwiperSlide>
-                  </div>
-)})}
-                </Swiper>
+              <div className='container justify-center'>
+                <StepSwiper post={post} />
               </div>
             </div>
           </div>
@@ -233,7 +179,9 @@ const PostDetail = () => {
           </button>
         </Link>
       </div>
-      ): isFavorite ? (
+      ): 
+      userToken ? ( 
+        isFavorite ? (
           <div className="my-6 flex items-center justify-center md:mr-6 md:justify-end gap-x-6">
           <button type="button" onClick={handleFavorite} className="flex items-center justify-between rounded-md bg-gray-500 hover:bg-gray-400 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-1 w-6 h-6">
@@ -251,6 +199,8 @@ const PostDetail = () => {
             いいね！
           </button>
           </div>
+      )):(
+        <></>
       )}
     </>
   )

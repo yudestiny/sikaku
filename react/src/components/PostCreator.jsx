@@ -44,7 +44,7 @@ const PostCreator = () => {
       }
     ]);
 
-  const [arrowHorizon, setArrowHorizon] = useState(false);
+  const [arrowHorizon, setArrowHorizon] = useState(window.innerWidth >= 960);
 
   const handleWindowResize = () =>{
     window.innerWidth >= 960 ? (setArrowHorizon(true)):(setArrowHorizon(false))}
