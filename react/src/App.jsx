@@ -9,6 +9,7 @@ import PostDetail from "./components/PostDetail"
 import PostEditor from "./components/PostEditor"
 import PostCreator from "./components/PostCreator"
 import Favorites from "./components/Favorites"
+import Mypage from "./components/Mypage"
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="Signup" element={<Signup />} />
+          <Route path="my-page" element={<Mypage />} />
           <Route path="favorite" element={<Favorites />} />
           <Route path="posts/create" element={<PostCreator />} />
           <Route path="posts/detail/:id" element={<PostDetail />} />

@@ -6,7 +6,11 @@ module.exports = withMT({
     "./src/**/*.{html,js,jsx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'gold': 'rgba(213, 243, 101, 1)',
+      },
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),

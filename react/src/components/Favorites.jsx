@@ -3,6 +3,7 @@ import axiosClient from '../axios'
 import { useStateContext } from '../context/ContextProvider'
 import { Typography } from '@material-tailwind/react';
 import { Link } from 'react-router-dom';
+import { Pagination } from './Pagination';
 
 const Favorites = () => {
   const {currentUser} = useStateContext();
@@ -34,7 +35,7 @@ const Favorites = () => {
       ): favorites.length !== 0 ? (
       <div>
         {favorites.map(fav => (
-          <Link to={`/posts/detail/${fav.post_id}`}>
+        <Link to={"/posts"} state={{qualification:item.id}}>
           <div className='shadow-lg mb-6 mx-6 p-6 rounded hover:bg-gray-200'>
             <Typography>取得した資格：{fav.qualification_name}</Typography>
             <Typography>利用した主なサービス：{fav.service_name}</Typography>

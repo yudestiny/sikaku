@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, IconButton } from "@material-tailwind/react";
+import { Button, IconButton, Typography } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import axiosClient from "../axios";
 import { useLocation } from "react-router-dom";
@@ -16,7 +16,6 @@ export function Pagination() {
   useEffect (() => {
     const fetchData = async() => {
       try {
-        console.log(selectCategory)
         const response = await axiosClient.get(`posts/index`,{params:state});
         console.log(response)
         setPosts(response.data);
@@ -25,7 +24,7 @@ export function Pagination() {
       }
     }
     fetchData();
-  },[])
+  },[state])
 
   const handleClick = async(index) => {
     setActive(index);
@@ -82,6 +81,9 @@ const  page = () => {
 
   return (
     <>
+    <div className="mx-auto">
+      <Typography variant="h3" className="mx-4 text-center">{state.title? (state.title):("投稿")}一覧</Typography>
+    </div>
     <Posts posts={posts} />
     <div className="flex justify-center items-center gap-4">
       <Button

@@ -35,5 +35,14 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
+            DB::table('users')->insert([
+                'id' => Str::uuid(),
+                'name' => 'hoge',
+                'email' => 'hoge@example.com',
+                'password' => Hash::make('hogehoge1'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
     }
 }

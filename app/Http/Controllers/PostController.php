@@ -39,6 +39,22 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
+        if (!is_null($request['favorites'])) {
+            $favorites = Post::whereHas('favorites', function($q) use ($request) {
+                $q->where('user_id', '=', $request['favorites']);
+            })
+            ->with('favorites')
+            ->join('users', 'posts.user_id', '=', 'users.id')
+            ->join('services', 'posts.service_id', '=', 'services.id')
+            ->join('statuses', 'posts.status_id', '=', 'statuses.id')
+            ->leftJoin('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
+            ->join('categories', 'qualifications.category_id', '=', 'categories.id')
+            ->select('posts.id as id', 'posts.target', 'users.name as user_name', 'qualifications.name as qualification_name',
+            'posts.created_at', 'posts.description', 'categories.id as category_id', 'services.name as service_name');
+
+            return $favorites->paginate(9);
+        }
+
         $query = Post::with('favorites')->join('users', 'posts.user_id', '=', 'users.id')
         ->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
         ->join('categories', 'qualifications.category_id', '=', 'categories.id')
