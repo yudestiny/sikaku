@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ServicesTableSeeder::class,
             PostsTableSeeder::class,
             StepsTableSeeder::class,
+            FavoritesTableSeeder::class,
         ]);
     }
 }

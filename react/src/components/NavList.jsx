@@ -21,74 +21,76 @@ function NavList() {
       setUserToken(null)
     })
   }
+  console.log(currentUser)
   return (
     <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium lg:text-md"
-      >
-        <Link to="#" className="flex items-center hover:text-gray-600 transition-colors">
-          Pages
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium lg:text-md"
-      >
-        <Link to="/posts/create" className="flex items-center hover:text-gray-600 transition-colors">
-          新規投稿
-        </Link>
-      </Typography>
       {userToken ? (
         <>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font- lg:text-md"
-      >
-        <Link to="/favorite" className="flex items-center hover:text-gray-600 transition-colors">
-          お気に入り
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium lg:text-md"
-      >
-        <Link to="/logout" onClick={handleClick} className="flex items-center hover:text-gray-600 transition-colors">
-          ログアウト
-        </Link>
-      </Typography>
-      </>
-      ) : (
-        <>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium"
-      >
-        <Link to="/login" className="flex items-center hover:text-blue-500 transition-colors">
-          ログイン
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium"
-      >
-        <Link to="/signup" className="flex items-center hover:text-blue-500 transition-colors">
-          新規登録
-        </Link>
-      </Typography>
-      </>
+          <Typography
+            as="li"
+            variant="small"
+            color="blue-gray"
+            className="p-1 font-medium lg:text-md"
+          >
+            <Link to="/my-page" className="flex items-center hover:text-gray-600 transition-colors">
+              マイページ
+            </Link>
+          </Typography>
+          <Typography
+            as="li"
+            variant="small"
+            color="blue-gray"
+            className="p-1 font-medium lg:text-md"
+          >
+            <Link to="/posts/create" className="flex items-center hover:text-gray-600 transition-colors">
+              新規投稿
+            </Link>
+          </Typography>
+          <Typography
+            as="li"
+            variant="small"
+            color="blue-gray"
+            className="p-1 font- lg:text-md"
+          >
+            <Link to={"/posts"} state={{favorites:currentUser.id,title:"お気に入り投稿"}} className="flex items-center hover:text-gray-600 transition-colors">
+            {/* <Link to="/favorite" className="flex items-center hover:text-gray-600 transition-colors"> */}
+              お気に入り
+            </Link>
+          </Typography>
+          <Typography
+            as="li"
+            variant="small"
+            color="blue-gray"
+            className="p-1 font-medium lg:text-md"
+          >
+            <Link to="/logout" onClick={handleClick} className="flex items-center hover:text-gray-600 transition-colors">
+              ログアウト
+            </Link>
+          </Typography>
+          </>
+          ) : (
+            <>
+          <Typography
+            as="li"
+            variant="small"
+            color="blue-gray"
+            className="p-1 font-medium"
+          >
+            <Link to="/login" className="flex items-center hover:text-blue-500 transition-colors">
+              ログイン
+            </Link>
+          </Typography>
+          <Typography
+            as="li"
+            variant="small"
+            color="blue-gray"
+            className="p-1 font-medium"
+          >
+            <Link to="/signup" className="flex items-center hover:text-blue-500 transition-colors">
+              新規登録
+            </Link>
+          </Typography>
+        </>
       )}
     </ul>
   );

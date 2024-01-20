@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class FavoriteController extends Controller
 {
@@ -43,5 +44,16 @@ class FavoriteController extends Controller
         $favoriteStatus = Favorite::where('user_id', $request['user_id'])->where('post_id', $request['post_id'])->exists();
 
         return response()->json($favoriteStatus);
+    }
+
+    public function userRank (Request $request)
+    {
+        $favorites = Favorite::join('posts', 'favorites.post_id', '=', 'posts.id')
+            ->join('users', 'posts.user_id', '=', 'users.id')
+            ->select('users.id as favoriteUser', 'users.name', DB::raw('count(users.id) as count'),)
+            ->orderBy('count','desc')
+            ->groupBy('users.id', 'users.name')
+            ->get();
+        return response()->json($favorites);
     }
 }

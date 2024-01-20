@@ -43,6 +43,7 @@ Route::delete('posts/{post_id}', [PostController::class, 'destroy']);
 Route::post('favorite', [FavoriteController::class, 'toggleFavorite']);
 Route::get('favorite/status', [FavoriteController::class, 'getFavoriteStatus']);
 Route::get('favorite/index', [FavoriteController::class, 'index']);
+Route::get('favorite/user/rank', [FavoriteController::class, 'userRank']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
