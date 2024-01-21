@@ -125,7 +125,7 @@ class PostController extends Controller
 
     public function detail($post_id)
     {
-        $detail = Post::with('steps')->select('posts.id', 'users.id as user_id', 'posts.target', 'posts.start_date', 'statuses.id as status_id', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
+        $detail = Post::with('steps')->select('posts.id', 'users.id as user_id', 'posts.target', 'posts.start_date', 'statuses.name as status_name', 'statuses.id as status_id', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
         ->join('users', 'posts.user_id', '=', 'users.id')
             ->join('services', 'posts.service_id', '=', 'services.id')
             ->join('statuses', 'posts.status_id', '=', 'statuses.id')
