@@ -7,6 +7,9 @@ import { useStateContext } from '../context/ContextProvider'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import StepSwiper from './StepSwiper'
+import CommentList from './CommentList'
+import { CommentPost } from './CommentPost'
+import { ProfileImg } from './ProfileImg'
 // import { Navigation } from 'swiper'     //追記
 // import 'swiper/css/navigation'          //追記
 
@@ -15,30 +18,35 @@ const PostDetail = () => {
   const {id} = useParams();
   const [post,setPost] = useState([]);
   const [isFavorite,setIsFavorite] = useState(false);
+  const [comments,setComments] = useState([]);
     const { currentUser,setCurrentUser,userToken } = useStateContext();
     const navigate = useNavigate();
 
   useEffect (() => {
     const fetchData = async() => {
       try {
-        const [response,responseFavorite] = await Promise.all([
+        const [response,responseFavorite,responseComments] = await Promise.all([
           axiosClient.get(`posts/detail/${id}`),
           axiosClient.get("favorite/status", {
             params: {
               user_id: currentUser.id,
               post_id:id
-            }
-          })
+            }}
+            ),
+            axiosClient.get(`comments/index/${id}`)
         ]);
-        console.log(response.data)
         const pos = response.data;
-        console.log(pos)
           pos.created_at = pos.created_at.substring(0,10);
           pos.updated_at = pos.updated_at.substring(0,10);
           pos.start_date = pos.start_date.substring(0,10);
         setPost(pos);
         setIsFavorite(responseFavorite.data)
-                console.log(responseFavorite.data);
+        const com = responseComments.data;
+        com.forEach((c) => {
+        c.created_at = c.created_at.substring(0,10);
+      })
+        setComments(com);
+        console.log(responseComments.data);
       } catch (err) {
         console.log(err);
       }
@@ -71,7 +79,6 @@ const PostDetail = () => {
     }
   }
 
-  console.log(currentUser)
   return (
     <>
       <div className="space-y-12 px-6">
@@ -83,8 +90,8 @@ const PostDetail = () => {
                 ユーザー名
               </label>
               <div className="mt-2 md:flex md:flex-auto items-center gap-x-3">
-                <div className='w-full mb-3 md:w-1/4 flex'>
-                <UserCircleIcon className="w-auto h-12 mr-3 text-gray-300" aria-hidden="true" />
+                <div className='w-full mb-3 gap-3 md:w-1/4 flex items-center'>
+                  <ProfileImg img={post.image} size={10} />
                   <Typography
                     className="
                     rounded-md w-32 px-6 p-2 my-1.5  align-baseline items-center text-center justify-center text-sm font-semibold text-gray-900 ring-inset bg-white
@@ -108,8 +115,8 @@ const PostDetail = () => {
                   </label>
                   <div className="mt-2 flex">
                     <Typography className='mr-4'>{post.qualification_name}</Typography>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="green" class="text-white bg-white w-6 h-6">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="green" className="text-white bg-white w-6 h-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
                   </div>
                 </div>
@@ -195,8 +202,8 @@ const PostDetail = () => {
         isFavorite ? (
           <div className="my-6 flex items-center justify-center md:mr-6 md:justify-end gap-x-6">
           <button type="button" onClick={handleFavorite} className="flex items-center justify-between rounded-md bg-gray-500 hover:bg-gray-400 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-1 w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="mr-1 w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
             </svg>
             いいね！済み
           </button>
@@ -204,8 +211,8 @@ const PostDetail = () => {
           ):(
           <div className="my-6 flex items-center justify-center md:mr-6 md:justify-end gap-x-6">
           <button type="button" onClick={handleFavorite} className="flex items-center justify-between rounded-md bg-pink-500 hover:bg-pink-400 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-1 w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="mr-1 w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
             </svg>
             いいね！
           </button>
@@ -213,6 +220,12 @@ const PostDetail = () => {
       )):(
         <></>
       )}
+      <div className='flex justify-center'>
+        <CommentList comments={comments} /> 
+      </div>
+      <div className='flex justify-center'>
+        <CommentPost id={id} userId={currentUser.id} />
+      </div>
     </>
   )
 }
