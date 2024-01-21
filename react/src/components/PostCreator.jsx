@@ -58,17 +58,19 @@ const PostCreator = () => {
   }, [window.innerWidth]);
 
     useEffect(() => {
-      try {
       const fetchData = async() => {
-        const response = await axiosClient.get("categories");
-        const responseStatus = await axiosClient.get("statuses")
+        try {
+        const [response,responseStatus] = await Promise.all([
+          axiosClient.get("categories"),
+          axiosClient.get("statuses")
+        ])
         setCategories(response.data)
         setStatuses(responseStatus.data)
+        } catch (err) {
+          console.log(err)
+        }
       }
       fetchData();
-      } catch (err) {
-        console.log(err)
-      }
     },[])
 
   const handleChange = (index,column,value) => {
