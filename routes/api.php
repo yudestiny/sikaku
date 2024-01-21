@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\QualificationController;
@@ -39,6 +40,10 @@ Route::get('posts/index', [PostController::class, 'index']);
 Route::get('posts/detail/{post_id}', [PostController::class, 'detail']);
 Route::put('posts/{post_id}', [PostController::class, 'update']);
 Route::delete('posts/{post_id}', [PostController::class, 'destroy']);
+
+Route::get('comments/index/{post_id}', [CommentController::class, 'index']);
+Route::post('comment/post', [CommentController::class, 'create']);
+
 
 
 Route::post('favorite', [FavoriteController::class, 'toggleFavorite']);

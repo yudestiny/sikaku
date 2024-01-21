@@ -26,7 +26,6 @@ class PostsTableSeeder extends Seeder
                 'user_id' => $users[array_rand($users)],
                 'status_id' => $status[array_rand($status)],
                 'service_id' => $services[array_rand($services)],
-                'favorite_number' => rand(1, 20),
                 'start_date' => now()->subDays(rand(1, 365))->format('Y-m-d'),
                 'target' => $this->generateRandomTarget(),
                 'description' => $this->generateRandomDescription(),
