@@ -32,6 +32,7 @@ const PostDetail = () => {
         ]);
         console.log(response.data)
         const pos = response.data;
+        console.log(pos)
           pos.created_at = pos.created_at.substring(0,10);
           pos.updated_at = pos.updated_at.substring(0,10);
           pos.start_date = pos.start_date.substring(0,10);
@@ -83,7 +84,7 @@ const PostDetail = () => {
               </label>
               <div className="mt-2 md:flex md:flex-auto items-center gap-x-3">
                 <div className='w-full mb-3 md:w-1/4 flex'>
-                  <UserCircleIcon className="w-auto h-12 mr-3 text-gray-300" aria-hidden="true" />
+                <UserCircleIcon className="w-auto h-12 mr-3 text-gray-300" aria-hidden="true" />
                   <Typography
                     className="
                     rounded-md w-32 px-6 p-2 my-1.5  align-baseline items-center text-center justify-center text-sm font-semibold text-gray-900 ring-inset bg-white
@@ -112,15 +113,6 @@ const PostDetail = () => {
     </svg>
                   </div>
                 </div>
-
-                <div className="sm:w-1/2 mb-8">
-                  <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
-                    学習目的
-                  </label>
-                  <div className="mt-2 flex">
-                    <Typography className='mr-4'>{post.target}</Typography>
-                  </div>
-                </div>
               </div>
 
               <div className='col-span-1 sm:flex'>
@@ -133,6 +125,25 @@ const PostDetail = () => {
                   </div>
                 </div>
 
+                <div className="sm:w-1/2 mb-8">
+                  <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
+                    学習初期のステータス
+                  </label>
+                  <div className="mt-2 flex">
+                    <Typography className='mr-4'>{post.status_name}</Typography>
+                  </div>
+                </div>
+              </div>
+
+              <div className='col-span-1 sm:flex'>
+                <div className="sm:w-1/2 mb-8">
+                  <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
+                    学習目的
+                  </label>
+                  <div className="mt-2 flex">
+                    <Typography className='mr-4'>{post.target}</Typography>
+                  </div>
+                </div>
                 <div className="sm:w-1/2 mb-8">
                   <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
                     最も役立ったサービス、コンテンツ

@@ -39,7 +39,8 @@ class Post extends Model
     ];
 
     protected $date = [
-        'created_at'
+        'created_at',
+        'updated_at'
     ];
 
     /**

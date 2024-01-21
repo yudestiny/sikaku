@@ -58,17 +58,19 @@ const PostCreator = () => {
   }, [window.innerWidth]);
 
     useEffect(() => {
-      try {
       const fetchData = async() => {
-        const response = await axiosClient.get("categories");
-        const responseStatus = await axiosClient.get("statuses")
+        try {
+        const [response,responseStatus] = await Promise.all([
+          axiosClient.get("categories"),
+          axiosClient.get("statuses")
+        ])
         setCategories(response.data)
         setStatuses(responseStatus.data)
+        } catch (err) {
+          console.log(err)
+        }
       }
       fetchData();
-      } catch (err) {
-        console.log(err)
-      }
     },[])
 
   const handleChange = (index,column,value) => {
@@ -181,7 +183,6 @@ const PostCreator = () => {
         console.log(err)
       }
   }
-  console.log(currentUser)
   return (
     <>
       <form >
@@ -289,7 +290,7 @@ const PostCreator = () => {
                         <Card className="col-span-4 mx-4 pt-3 shadow-2xl my-2 rounded-lg">
                           <CardFooter className="flex pb-3 pt-0 mb-0">
                             <Typography  className='text-center items-center py-2 mr-3 justify-center text-md font-bold'>STEP<span className='rounded-md '>{step.stepNumber}</span></Typography>
-                            <Input className=''　placeholder='期間' value={step.period} onChange={(e) => handleChange(index,"period",e.target.value)}/>
+                            <Input className='' placeholder='期間' value={step.period} onChange={(e) => handleChange(index,"period",e.target.value)}/>
                           </CardFooter>
                           <CardBody className='py-0 bg-cover'>
                             <div className='mb-3'>

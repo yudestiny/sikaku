@@ -10,6 +10,7 @@ import PostEditor from "./components/PostEditor"
 import PostCreator from "./components/PostCreator"
 import Favorites from "./components/Favorites"
 import Mypage from "./components/Mypage"
+import PostsIndex from "./components/PostsIndex"
 
 function App() {
 
@@ -20,12 +21,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="Signup" element={<Signup />} />
-          <Route path="my-page" element={<Mypage />} />
+          <Route path="my-page/:id" element={<Mypage />} />
           <Route path="favorite" element={<Favorites />} />
           <Route path="posts/create" element={<PostCreator />} />
           <Route path="posts/detail/:id" element={<PostDetail />} />
           <Route path="posts/edit/:id" element={<PostEditor />} />
-          <Route path="posts" element={<Pagination />} />
+          <Route path="posts" element={<PostsIndex />} />
         </Route>
       </Routes>
 

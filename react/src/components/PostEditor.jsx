@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axiosClient from '../axios'
 import { Form, Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { ArrowDownCircleIcon, ArrowLeftCircleIcon, ArrowLeftIcon, ArrowRightCircleIcon, ArrowRightIcon, ArrowUpCircleIcon, MinusIcon, PhotoIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/solid'
-import { Button, Card, CardBody, CardFooter, CardHeader, Input, Textarea, Typography } from '@material-tailwind/react'
+import { Button, Card, CardBody, CardFooter, CardHeader, Input, Option, Select, Textarea, Typography } from '@material-tailwind/react'
 import { useStateContext } from '../context/ContextProvider'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -14,7 +14,7 @@ const PostEditor = () => {
     const [post,setPost] = useState({})
     const navigate = useNavigate();
     const { currentUser,userToken } = useStateContext();
-
+    console.log("入室")
     const [qualification,setQualification] = useState();
     const [target,setTarget] = useState();
     const [startDate,setStartDate] = useState();
@@ -23,7 +23,9 @@ const PostEditor = () => {
     const [description,setDescription] = useState();
     const [steps,setSteps] = useState();
 
-  const [arrowHorizon, setArrowHorizon] = useState(false);
+    const [statuses,setStatuses] = useState([]);
+
+    const [arrowHorizon, setArrowHorizon] = useState(window.innerWidth >= 960);
 
   const handleWindowResize = () =>{
     window.innerWidth >= 960 ? (setArrowHorizon(true)):(
@@ -36,14 +38,17 @@ const PostEditor = () => {
     return () => {
       window.removeEventListener("resize", handleWindowResize);
     };
-  }, []);
-
+  }, [window.innerWidth]);
 
       useEffect (() => {
         const fetchData = async() => {
           try {
-            const response = await axiosClient.get(`posts/detail/${id}`);
+            const [response,responseStatus] = await Promise.all([
+              axiosClient.get(`posts/detail/${id}`),
+              axiosClient.get("statuses")
+            ])
             const pos = response.data;
+            console.log(pos)
             pos.created_at = pos.created_at.substring(0,10);
             pos.updated_at = pos.updated_at.substring(0,10);
             pos.start_date = pos.start_date.substring(0,10);
@@ -51,11 +56,11 @@ const PostEditor = () => {
     setQualification(pos.qualification_name);
     setTarget(pos.target);
     setStartDate(pos.start_date);
-    setStatus(pos.status_name);
+    setStatus(pos.status_id);
     setService(pos.service_name);
     setDescription(pos.description);
     setSteps(pos.steps);
-
+    setStatuses(responseStatus.data);
 
           } catch (err) {
             console.log(err);
@@ -63,10 +68,12 @@ const PostEditor = () => {
         }
         fetchData();
       },[id])
+      
+  if ( !userToken || currentUser.id !== post.user_id) {
+    console.log("退出")
+    // navigate("/");
+  }
 
-    if ( !userToken || currentUser.id !== post.user_id) {
-      navigate("/");
-    }
 
 
   const handleChange = (index,column,value) => {
@@ -128,24 +135,24 @@ const PostEditor = () => {
 
   const handleEditConfirm = async() => {
     try {
-        navigate(`/posts/detail/${post.id}`);
-        const response = axiosClient.put(`/posts/${post.id}`, {
-          id:post.id,
-          qualification,
-          status,
-          target,
-          service,
-          start_date:startDate,
-          description,
-          steps
-        })
-        console.log(response)
+      const response = axiosClient.put(`/posts/${post.id}`, {
+        id:post.id,
+        qualification,
+        status,
+        target,
+        service,
+        start_date:startDate,
+        description,
+        steps
+      })
+      console.log(response)
+      navigate(`/posts/detail/${post.id}`);
       } catch (err) {
         console.log(err)
       }
   }
 
-  console.log(post)
+  console.log(status)
   return (
     <>
       <form >
@@ -205,8 +212,15 @@ const PostEditor = () => {
                       学習開始前のステータス
                     </label>
                     <div className="mt-2 flex">
-                      <Input value={status} onChange={e => setStatus(e.target.value)} className='mr-4' placeholder='例：まったくの初心者'/>
+                    <Select label="学習開始時の状態を選択" onChange={(e) => setStatus(e)}>
+          { statuses?.map((item) => (
+            <Option key={item.id} value={`${item.id}`}>{item.name}</Option>
+          ))}
+        </Select>
                     </div>
+                    {/* <div className="mt-2 flex">
+                      <Input value={status} onChange={e => setStatus(e.target.value)} className='mr-4' placeholder='例：まったくの初心者'/>
+                    </div> */}
                   </div>
                 </div>
 

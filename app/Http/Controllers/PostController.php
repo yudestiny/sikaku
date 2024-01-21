@@ -66,13 +66,11 @@ class PostController extends Controller
         if (!is_null($request['qualification'])) {
             $query = $query->where('qualifications.id', '=', $request['qualification']);
         }
+        if (!is_null($request['user'])) {
+            $query = $query->where('posts.user_id', '=', $request['user']);
+        }
 
         return $query->paginate(9);
-
-        // foreach ($query as $q) {
-        //     $favorites = Favorite::select(DB::raw('count(favorites.post_id) as count'))
-        //     ->where('favorites.post_id', $q->id)->get();
-        // }
     }
 
     public function store(Request $request)
@@ -127,7 +125,7 @@ class PostController extends Controller
 
     public function detail($post_id)
     {
-        $detail = Post::with('steps')->select('posts.id', 'users.id as user_id', 'posts.target', 'posts.start_date', 'statuses.name as status_name', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
+        $detail = Post::with('steps')->select('posts.id', 'users.id as user_id', 'posts.target', 'posts.start_date', 'statuses.name as status_name', 'statuses.id as status_id', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
         ->join('users', 'posts.user_id', '=', 'users.id')
             ->join('services', 'posts.service_id', '=', 'services.id')
             ->join('statuses', 'posts.status_id', '=', 'statuses.id')
@@ -158,7 +156,7 @@ class PostController extends Controller
                 'name' => $request['qualification'],
             ]);
         }
-        $qualificationId = Qualification::select('id')->where('name', $request['qualification']);
+        $qualificationId = Qualification::select('id')->where('name', $request['qualification'])->first();
 
 
         $service = Service::find($post->service_id);
@@ -172,24 +170,47 @@ class PostController extends Controller
 
         foreach ($request['steps'] as $step) {
             $exStep = Step::find($step['id']);
+            $serviceStepId = $step['service_id'];
+
+        $serviceStep = Service::find($exStep->id);
+        if ($serviceStep['name'] != $step['name']) {
+            $newService = Service::insert([
+                'name' => $step['name'],
+            ]);
+            $serviceStepId = $newService['id'];
+        }
+
+            if ($exStep) {
                 $exStep->update([
                     'step_number' => $step['step_number'],
+                    'service_id' => $serviceStepId,
                     'period' => $step['period'],
                     'description' => $step['description'],
                 ]);
+            } else {
+                $exStep->insert([
+                    'post_id' => $post->id,
+                    'step_number' => $step['step_number'],
+                    'service_id' => $serviceStepId,
+                    'period' => $step['period'],
+                    'description' => $step['description'],
+                ]);
+                
+            }
             }
 
 
         $post->update([
-            'qualification_id' => $qualificationId,
+            'qualification_id' => $qualificationId->id,
             'service_id' => $serviceId['id'],
             'target' => $request['target'],
+            'status_id' => $request['status'],
             'start_date' => $request['start_date'],
             'description' => $request['description'],
             'updated_at' => now()
         ]);
 
-        return response()->json($post->target);
+        return response()->json(['message' => '編集に成功しました']);
 
     }
 
