@@ -66,13 +66,11 @@ class PostController extends Controller
         if (!is_null($request['qualification'])) {
             $query = $query->where('qualifications.id', '=', $request['qualification']);
         }
+        if (!is_null($request['user'])) {
+            $query = $query->where('posts.user_id', '=', $request['user']);
+        }
 
         return $query->paginate(9);
-
-        // foreach ($query as $q) {
-        //     $favorites = Favorite::select(DB::raw('count(favorites.post_id) as count'))
-        //     ->where('favorites.post_id', $q->id)->get();
-        // }
     }
 
     public function store(Request $request)

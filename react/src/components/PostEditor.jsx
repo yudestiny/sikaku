@@ -23,7 +23,7 @@ const PostEditor = () => {
     const [description,setDescription] = useState();
     const [steps,setSteps] = useState();
 
-  const [arrowHorizon, setArrowHorizon] = useState(false);
+    const [arrowHorizon, setArrowHorizon] = useState(window.innerWidth >= 960);
 
   const handleWindowResize = () =>{
     window.innerWidth >= 960 ? (setArrowHorizon(true)):(
@@ -36,7 +36,7 @@ const PostEditor = () => {
     return () => {
       window.removeEventListener("resize", handleWindowResize);
     };
-  }, []);
+  }, [window.innerWidth]);
 
 
       useEffect (() => {

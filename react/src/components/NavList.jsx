@@ -21,7 +21,7 @@ function NavList() {
       setUserToken(null)
     })
   }
-  console.log(currentUser)
+  
   return (
     <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
       {userToken ? (
@@ -32,7 +32,7 @@ function NavList() {
             color="blue-gray"
             className="p-1 font-medium lg:text-md"
           >
-            <Link to="/my-page" className="flex items-center hover:text-gray-600 transition-colors">
+            <Link to={`/my-page/${currentUser.id}`} className="flex items-center hover:text-gray-600 transition-colors">
               マイページ
             </Link>
           </Typography>

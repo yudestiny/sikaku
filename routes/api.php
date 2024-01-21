@@ -8,6 +8,7 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\QualificationController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +45,9 @@ Route::post('favorite', [FavoriteController::class, 'toggleFavorite']);
 Route::get('favorite/status', [FavoriteController::class, 'getFavoriteStatus']);
 Route::get('favorite/index', [FavoriteController::class, 'index']);
 Route::get('favorite/user/rank', [FavoriteController::class, 'userRank']);
+
+Route::get('user/profile/{user_id}', [UserController::class, 'userProfile']);
+Route::post('profile/edit', [UserController::class, 'edit']);
 
 
 Route::middleware('auth:sanctum')->group(function () {

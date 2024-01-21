@@ -46,11 +46,11 @@ class FavoriteController extends Controller
         return response()->json($favoriteStatus);
     }
 
-    public function userRank (Request $request)
+    public function userRank ()
     {
         $favorites = Favorite::join('posts', 'favorites.post_id', '=', 'posts.id')
             ->join('users', 'posts.user_id', '=', 'users.id')
-            ->select('users.id as favoriteUser', 'users.name', DB::raw('count(users.id) as count'),)
+            ->select('users.id as favoriteUserId', 'users.name', DB::raw('count(users.id) as count'),)
             ->orderBy('count','desc')
             ->groupBy('users.id', 'users.name')
             ->get();
