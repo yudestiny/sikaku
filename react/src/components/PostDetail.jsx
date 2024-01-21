@@ -9,6 +9,7 @@ import 'swiper/css';
 import StepSwiper from './StepSwiper'
 import CommentList from './CommentList'
 import { CommentPost } from './CommentPost'
+import { ProfileImg } from './ProfileImg'
 // import { Navigation } from 'swiper'     //追記
 // import 'swiper/css/navigation'          //追記
 
@@ -89,8 +90,8 @@ const PostDetail = () => {
                 ユーザー名
               </label>
               <div className="mt-2 md:flex md:flex-auto items-center gap-x-3">
-                <div className='w-full mb-3 md:w-1/4 flex'>
-                <UserCircleIcon className="w-auto h-12 mr-3 text-gray-300" aria-hidden="true" />
+                <div className='w-full mb-3 gap-3 md:w-1/4 flex items-center'>
+                  <ProfileImg img={post.image} size={10} />
                   <Typography
                     className="
                     rounded-md w-32 px-6 p-2 my-1.5  align-baseline items-center text-center justify-center text-sm font-semibold text-gray-900 ring-inset bg-white

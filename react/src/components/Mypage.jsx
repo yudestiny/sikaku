@@ -36,7 +36,7 @@ const Mypage = () => {
         <>
       <div className='m-6 p-4 border rounded-lg text-center justify-center block'>
         <div className='mb-3 gap-3 flex items-center justify-center'>
-          <ProfileImg img={userProfile.image} />
+          <ProfileImg img={userProfile.image} size={12} />
           <p>{userProfile?.name}</p>
         </div>
         <ProfileModal userProfile={userProfile} />
