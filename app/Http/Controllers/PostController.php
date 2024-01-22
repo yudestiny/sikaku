@@ -138,71 +138,57 @@ class PostController extends Controller
 
     public function update (Request $request)
     {
-        // $validatedData = $request->validate([
-        // 'qualification' => 'required|string',
-        // 'target' => 'required|text',
-        // 'service' => 'required|string',
-        // 'start_date' => 'required|date',
-        // 'description' => 'required|text'
-        // ]);
-
-
-        // $post = Post::find($post_id);
         $post = Post::find($request['id']);
-
         $qualification = Qualification::find($post->qualification_id);
+
         if ($qualification['name'] !== $request['qualification']) {
             $qualification->update([
                 'name' => $request['qualification'],
             ]);
         }
         $qualificationId = Qualification::select('id')->where('name', $request['qualification'])->first();
+        $service = Service::createOrFirst(['name' => $request['service']]);
+        $exSteps = Step::select('id')->where('post_id', $request['id'])->get()->toArray();
 
-
-        $service = Service::find($post->service_id);
-        if ($service['name'] !== $request['service']) {
-            Service::insert([
-                'name' => $request['service'],
-            ]);
+        $ExSteps = [];
+        foreach ($exSteps as $ex) {
+            $ExSteps[] = $ex['id'];
         }
-        $serviceId = Service::select('id', 'name')->where('name', $request['service'])->first();
-
 
         foreach ($request['steps'] as $step) {
-            $exStep = Step::find($step['id']);
-            $serviceStepId = $step['service_id'];
+            $exStep = Step::where('id',$step['id'])->first();
+            $serviceStep = Service::createOrFirst(['name' => $step['name']]);
 
-        $serviceStep = Service::find($exStep->id);
-        if ($serviceStep['name'] != $step['name']) {
-            $newService = Service::insert([
-                'name' => $step['name'],
-            ]);
-            $serviceStepId = $newService->id;
-        }
-
-            if ($exStep) {
+            if ($exStep && in_array($exStep['id'], $ExSteps)) {
+                $ExSteps = array_diff($ExSteps, [$exStep['id']]);
                 $exStep->update([
+                    'id' => $exStep['id'],
                     'step_number' => $step['step_number'],
-                    'service_id' => $serviceStepId,
+                    'service_id' => $serviceStep['id'],
                     'period' => $step['period'],
                     'description' => $step['description'],
                 ]);
             } else {
-                $exStep->insert([
+                Step::create([
                     'post_id' => $post->id,
                     'step_number' => $step['step_number'],
-                    'service_id' => $serviceStepId,
+                    'service_id' => $serviceStep['id'],
                     'period' => $step['period'],
                     'description' => $step['description'],
                 ]);
                 
             }
             }
+            
+            foreach ($ExSteps as $ex) {
+                Step::find($ex)
+                ->delete();
+            }
 
 
         $post->update([
             'qualification_id' => $qualificationId->id,
-            'service_id' => $serviceId['id'],
+            'service_id' => $service['id'],
             'target' => $request['target'],
             'status_id' => $request['status'],
             'start_date' => $request['start_date'],
@@ -210,7 +196,7 @@ class PostController extends Controller
             'updated_at' => now()
         ]);
 
-        return response()->json(['message' => '編集に成功しました']);
+        return response()->json($ExSteps);
 
     }
 
