@@ -10,17 +10,17 @@ import { Pagination } from './Pagination';
    
   export function ProfileDetail({userProfile}) {
     return (
-      <Tabs value="html" className="max-w-full border">
+      <Tabs value="html" className="max-w-full w-full m-4 border justify-center">
         <TabsHeader
           className="bg-transparent"
           indicatorProps={{
-            className: "bg-gray-900/10 shadow-none  !text-gray-900",
+            className: "bg-gray-900/10 shadow-none w-full flex justify-between !text-gray-900",
           }}
         >
-            <Tab key="posts" value="posts" className='border rounded min-w-fit'>
+            <Tab key="posts" value="posts" className='border rounded w-1/2 min-w-fit'>
               投稿記事
             </Tab>
-            <Tab key="favorites" value="favorites" className='border min-w-fit'>
+            <Tab key="favorites" value="favorites" className='border w-1/2 min-w-fit'>
               いいね
             </Tab>
         </TabsHeader>

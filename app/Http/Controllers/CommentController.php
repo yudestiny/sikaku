@@ -31,7 +31,12 @@ class CommentController extends Controller
             'content' => $request['content']
         ]);
 
-        return response()->json(['message' => 'コメントを保存しました']);
+        $commentInfo = Comment::join('users', 'comments.user_id', 'users.id')
+            ->select('comments.content', 'comments.created_at', 'users.image', 'comments.post_id', 'comments.user_id', 'users.name as user_name')
+            ->where('comments.id', $comment->id)
+            ->first();
+
+        return response()->json($commentInfo);
     }
 
     /**

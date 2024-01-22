@@ -11,7 +11,7 @@ export default function HomePosts({posts}) {
   }
 
   return (
-    <div className="bg-gray-100 py-8 m-2 justify-center">
+    <div className="bg-gray-100 py-4 m-2 justify-center">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 mb-4">
         <div className="mx-auto max-w-2xl lg:mx-0">
           <div className="flex gap-x-2">
@@ -62,13 +62,13 @@ export default function HomePosts({posts}) {
           ))}
         </div>
       </div>
-    <div className="items-center">
-      <Link to="/posts">
-        <Typography
-            variant="h6"
-            className="mr-4 cursor-pointer py-1.5 text-right">もっと見る→</Typography>
-      </Link>
-    </div>
+      <div className="items-center">
+        <Link to="/posts">
+          <Typography
+              variant="h6"
+              className="mr-4 cursor-pointer py-1.5 text-right">もっと見る→</Typography>
+        </Link>
+      </div>
     </div>
   )
 }
