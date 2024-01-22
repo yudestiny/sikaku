@@ -14,7 +14,6 @@ const PostEditor = () => {
     const [post,setPost] = useState({})
     const navigate = useNavigate();
     const { currentUser,userToken } = useStateContext();
-    console.log("入室")
     const [qualification,setQualification] = useState();
     const [target,setTarget] = useState();
     const [startDate,setStartDate] = useState();
@@ -24,6 +23,8 @@ const PostEditor = () => {
     const [steps,setSteps] = useState();
 
     const [statuses,setStatuses] = useState([]);
+
+    const [message,setMessage] = useState("");
 
     const [arrowHorizon, setArrowHorizon] = useState(window.innerWidth >= 960);
 
@@ -48,7 +49,6 @@ const PostEditor = () => {
               axiosClient.get("statuses")
             ])
             const pos = response.data;
-            console.log(pos)
             pos.created_at = pos.created_at.substring(0,10);
             pos.updated_at = pos.updated_at.substring(0,10);
             pos.start_date = pos.start_date.substring(0,10);
@@ -70,8 +70,7 @@ const PostEditor = () => {
       },[id])
       
   if ( !userToken || currentUser.id !== post.user_id) {
-    console.log("退出")
-    // navigate("/");
+    navigate("/");
   }
 
 
@@ -144,15 +143,14 @@ const PostEditor = () => {
         start_date:startDate,
         description,
         steps
-      })
-      console.log(response)
+      }).then (() => {
       navigate(`/posts/detail/${post.id}`);
+      })
       } catch (err) {
         console.log(err)
       }
   }
 
-  console.log(status)
   return (
     <>
       <form >
