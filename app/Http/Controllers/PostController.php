@@ -177,7 +177,7 @@ class PostController extends Controller
             $newService = Service::insert([
                 'name' => $step['name'],
             ]);
-            $serviceStepId = $newService['id'];
+            $serviceStepId = $newService->id;
         }
 
             if ($exStep) {

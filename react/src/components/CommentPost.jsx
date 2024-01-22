@@ -2,7 +2,7 @@ import { Textarea, Button, IconButton } from "@material-tailwind/react";
 import axiosClient from "../axios";
 import { useState } from "react";
  
-export function CommentPost({id,userId}) {
+export function CommentPost({id,userId,comments,setComments}) {
     const [content,setContent] = useState("");
     const [error,setError] = useState(false);
     const handlePost = async() => {
@@ -15,7 +15,10 @@ export function CommentPost({id,userId}) {
                 user_id:userId,
                 content,
             })
-            console.log(response.data)
+            const res = response.data
+            res.created_at = res.created_at.substring(0,10);
+            setComments([...comments, res])
+            setContent("")
         } catch (err) {
             console.log(err)
         }

@@ -45,6 +45,7 @@ const PostDetail = () => {
         com.forEach((c) => {
         c.created_at = c.created_at.substring(0,10);
       })
+      console.log(com)
         setComments(com);
         console.log(responseComments.data);
       } catch (err) {
@@ -224,7 +225,7 @@ const PostDetail = () => {
         <CommentList comments={comments} /> 
       </div>
       <div className='flex justify-center'>
-        <CommentPost id={id} userId={currentUser.id} />
+        <CommentPost id={id} userId={currentUser.id} comments={comments} setComments={setComments} />
       </div>
     </>
   )
