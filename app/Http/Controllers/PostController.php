@@ -196,7 +196,7 @@ class PostController extends Controller
             'updated_at' => now()
         ]);
 
-        return response()->json($ExSteps);
+        return ['message' => '編集を保存しました'];
 
     }
 
