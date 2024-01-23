@@ -161,7 +161,6 @@ const PostCreator = () => {
   }
 
   const handlePostConfirm = async() => {
-    localStorage.removeItem('TOKEN')
     try {
       const response = axiosClient.post(`/posts/create`, {
           id:currentUser?.id,
