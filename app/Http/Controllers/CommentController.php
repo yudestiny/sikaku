@@ -66,16 +66,25 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, $comment_id)
     {
-        //
+        $comment = Comment::find($comment_id);
+        $comment->update([
+            'content' => $request['content'],
+            'updated_at' => now()
+        ]);
+
+        return response()->json(['message' => '編集に成功しました']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy($comment_id)
     {
-        //
+        $comment = Comment::find($comment_id);
+        $comment->delete();
+
+        return response()->json(['message' => '正常に削除されました']);
     }
 }

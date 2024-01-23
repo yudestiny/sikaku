@@ -19,8 +19,8 @@ const PostDetail = () => {
   const [post,setPost] = useState([]);
   const [isFavorite,setIsFavorite] = useState(false);
   const [comments,setComments] = useState([]);
-    const { currentUser,setCurrentUser,userToken } = useStateContext();
-    const navigate = useNavigate();
+  const { currentUser,setCurrentUser,userToken } = useStateContext();
+  const navigate = useNavigate();
 
   useEffect (() => {
     const fetchData = async() => {
@@ -222,7 +222,7 @@ const PostDetail = () => {
         <></>
       )}
       <div className='flex justify-center'>
-        <CommentList comments={comments} /> 
+        <CommentList postUser={post.user_id} comments={comments} setComments={setComments} /> 
       </div>
       <div className='flex justify-center'>
         <CommentPost id={id} userId={currentUser.id} comments={comments} setComments={setComments} />
