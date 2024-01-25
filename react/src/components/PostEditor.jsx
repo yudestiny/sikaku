@@ -26,6 +26,7 @@ const PostEditor = () => {
 
     const [message,setMessage] = useState("");
 
+    const [submitLoading,setSubmitLoading] = useState(false)
     const [arrowHorizon, setArrowHorizon] = useState(window.innerWidth >= 960);
 
   const handleWindowResize = () =>{
@@ -133,6 +134,7 @@ const PostEditor = () => {
   }
 
   const handleEditConfirm = async() => {
+    setSubmitLoading(true)
     try {
       const response = axiosClient.put(`/posts/${post.id}`, {
         id:post.id,
@@ -144,10 +146,12 @@ const PostEditor = () => {
         description,
         steps
       }).then (() => {
+        setSubmitLoading(false)
       navigate(`/posts/detail/${post.id}`);
       })
       } catch (err) {
         console.log(err)
+        setSubmitLoading(false)
       }
   }
 
@@ -305,7 +309,7 @@ const PostEditor = () => {
         <div className="my-6 flex items-center justify-center md:mr-6 md:justify-end gap-x-6">
           <Link>
             <Button
-
+              disabled={submitLoading}
               className="rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={handleEditConfirm}
             >
               確定する

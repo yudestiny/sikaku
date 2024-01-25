@@ -25,10 +25,15 @@ class CommentController extends Controller
      */
     public function create(Request $request)
     {
+        $validatedData = $request->validate([
+            'user_id' => 'required',
+            'post_id' => 'required',
+            'content' => 'required|string',
+        ]);
         $comment = Comment::create([
-            'user_id' => $request['user_id'],
-            'post_id' => $request['post_id'],
-            'content' => $request['content']
+            'user_id' => $validatedData['user_id'],
+            'post_id' => $validatedData['post_id'],
+            'content' => $validatedData['content']
         ]);
 
         $commentInfo = Comment::join('users', 'comments.user_id', 'users.id')
@@ -68,9 +73,12 @@ class CommentController extends Controller
      */
     public function update(Request $request, $comment_id)
     {
+        $validatedData = $request->validate([
+            'content' => 'required|string',
+        ]);
         $comment = Comment::find($comment_id);
         $comment->update([
-            'content' => $request['content'],
+            'content' => $validatedData['content'],
             'updated_at' => now()
         ]);
 

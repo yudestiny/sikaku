@@ -17,6 +17,7 @@ import { ProfileImg } from './ProfileImg'
 const PostDetail = () => {
   const {id} = useParams();
   const [post,setPost] = useState([]);
+  const [loading,setLoading] = useState({screen:true,button:true});
   const [isFavorite,setIsFavorite] = useState(false);
   const [comments,setComments] = useState([]);
   const { currentUser,setCurrentUser,userToken } = useStateContext();
@@ -36,26 +37,28 @@ const PostDetail = () => {
             axiosClient.get(`comments/index/${id}`)
         ]);
         const pos = response.data;
-          pos.created_at = pos.created_at.substring(0,10);
-          pos.updated_at = pos.updated_at.substring(0,10);
+        pos.created_at = pos.created_at.substring(0,10);
+        pos.updated_at = pos.updated_at.substring(0,10);
           pos.start_date = pos.start_date.substring(0,10);
         setPost(pos);
         setIsFavorite(responseFavorite.data)
         const com = responseComments.data;
         com.forEach((c) => {
-        c.created_at = c.created_at.substring(0,10);
-      })
-      console.log(com)
+          c.created_at = c.created_at.substring(0,10);
+        })
+        console.log(com)
         setComments(com);
         console.log(responseComments.data);
       } catch (err) {
         console.log(err);
       }
+      setLoading({screen:false})
     }
     fetchData();
   },[id,currentUser])
 
   const handleDelete = async() => {
+    setLoading({button:true})
     if (window.confirm("本当に削除してもよろしいですか？")) {
       try {
         const response = axiosClient.delete(`/posts/${post.id}`)
@@ -65,8 +68,10 @@ const PostDetail = () => {
         console.log(err)
       }
     }
+    setLoading({button:false})
   }
   const handleFavorite = async() => {
+    setLoading({button:true})
     try {
       const response = await axiosClient.post("favorite", {
         user_id:currentUser.id,
@@ -78,6 +83,7 @@ const PostDetail = () => {
     } catch (err) {
       console.log(err);
     }
+    setLoading({button:false})
   }
 
   return (
@@ -94,9 +100,7 @@ const PostDetail = () => {
                 <div className='w-full mb-3 gap-3 md:w-1/4 flex items-center'>
                   <ProfileImg img={post.image} size={10} />
                   <Typography
-                    className="
-                    rounded-md w-32 px-6 p-2 my-1.5  align-baseline items-center text-center justify-center text-sm font-semibold text-gray-900 ring-inset bg-white
-                    "
+                    className="rounded-md w-32 px-6 p-2 my-1.5  align-baseline items-center text-center justify-center text-sm font-semibold text-gray-900 ring-inset bg-white"
                   >
                     {post.user_name}
                   </Typography>
@@ -176,21 +180,24 @@ const PostDetail = () => {
               <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
                 学習ステップ
               </label>
-              <div className='container justify-center'>
+              <div className='flex justify-between'>
                 <StepSwiper post={post} />
               </div>
             </div>
           </div>
         </div>
-      { (userToken && currentUser.id === post.user_id) ? (
+      {loading.screen ? (
+        <></>
+      ):(userToken && currentUser.id === post.user_id ) ? (
       <div className="my-6 flex items-center justify-center md:mr-6 md:justify-end gap-x-6">
         <Link to={`/posts/edit/${post.id}`} state={{post:post}}>
-          <button type="button" className="rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+          <button type="button" disabled={loading.button} className="rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             編集する
           </button>
         </Link>
         <Link>
-          <button
+          <button 
+            disabled={loading.button}
             onClick={handleDelete}
             className="rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
@@ -202,7 +209,7 @@ const PostDetail = () => {
       userToken ? ( 
         isFavorite ? (
           <div className="my-6 flex items-center justify-center md:mr-6 md:justify-end gap-x-6">
-          <button type="button" onClick={handleFavorite} className="flex items-center justify-between rounded-md bg-gray-500 hover:bg-gray-400 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+          <button type="button" disabled={loading.button} onClick={handleFavorite} className="flex items-center justify-between rounded-md bg-gray-500 hover:bg-gray-400 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="mr-1 w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
             </svg>
@@ -211,7 +218,7 @@ const PostDetail = () => {
           </div>
           ):(
           <div className="my-6 flex items-center justify-center md:mr-6 md:justify-end gap-x-6">
-          <button type="button" onClick={handleFavorite} className="flex items-center justify-between rounded-md bg-pink-500 hover:bg-pink-400 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+          <button type="button" disabled={loading.button} onClick={handleFavorite} className="flex items-center justify-between rounded-md bg-pink-500 hover:bg-pink-400 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="mr-1 w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
             </svg>

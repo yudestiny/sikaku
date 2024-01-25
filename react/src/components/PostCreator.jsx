@@ -13,7 +13,8 @@ const PostCreator = () => {
     const [post,setPost] = useState({})
     const navigate = useNavigate();
     const { currentUser,userToken } = useStateContext();
-
+    const [submitLoading,setSubmitLoading] = useState(false)
+    const [error, setError] = useState({__html: "", many: {}});
     const [qualification,setQualification] = useState();
     const [category,setCategory] = useState("");
     const [categories,setCategories] = useState([]);
@@ -161,8 +162,8 @@ const PostCreator = () => {
   }
 
   const handlePostConfirm = async() => {
-    try {
-      const response = axiosClient.post(`/posts/create`, {
+    setSubmitLoading(true)
+    const state = {
           id:currentUser?.id,
           qualification,
           category,
@@ -172,16 +173,25 @@ const PostCreator = () => {
           start_date:startDate,
           description,
           steps
-        })
+        }
+    
+      const response = axiosClient.post(`/posts/create`, state)
         .then(response => {
           console.log(response)
           const post = response.data;
+          setSubmitLoading(false)
           navigate(`/posts/detail/${post.id}`);
         })
-      } catch (err) {
-        console.log(err)
-      }
-  }
+       .catch (error => {
+         console.log(error.response.data)
+         
+         if (error.response.data.errors) {
+           const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => [...next, ...accum], [])
+           setError({__html:error.response.data.message, many: finalErrors})
+          }
+        })
+        setSubmitLoading(false)
+    }
   return (
     <>
       <form >
@@ -314,11 +324,12 @@ const PostCreator = () => {
   )})}
                 </div>
               </div>
+              { error.__html && (<div className="rounded mt-8 py-2 px-3 text-red-500" dangerouslySetInnerHTML={error}></div>)}
 
         <div className="my-6 flex items-center justify-center md:mr-6 md:justify-end gap-x-6">
           <Link>
             <Button
-
+              disabled={submitLoading}
               className="rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={handlePostConfirm}
             >
               投稿する

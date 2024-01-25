@@ -11,10 +11,13 @@ import axiosClient from "../axios";
  
 export function CommentEditModal({comment,comments,setComments}) {
   const [open, setOpen] = React.useState(false);
+  const [error, setError] = useState({__html: "", many: {}});
+  const [submitLoading,setSubmitLoading] = useState(false)
     const [editContent,setEditContent] = useState(comment.content);
   const handleOpen = () => setOpen(!open);
 
   const handleEdit = () => {
+    setSubmitLoading(true)
     try {
         const response = axiosClient.put(`comment/update/${comment.id}`, {content:editContent});
         console.log(response)
@@ -27,9 +30,15 @@ export function CommentEditModal({comment,comments,setComments}) {
         console.log(comments)
         setComments(editedComments)
         setOpen(!open)
+        setSubmitLoading(false)
 
-    } catch (err) {
-        console.log(err)
+    } catch (error) {
+        if (error.response) {
+            const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => [...next, ...accum], [])
+            setError({__html:finalErrors.join('<br>'), many: finalErrors})
+          }
+        console.log(error)
+        setSubmitLoading(false)
     }
   }
  
@@ -50,6 +59,7 @@ export function CommentEditModal({comment,comments,setComments}) {
         <DialogHeader>コメントの編集</DialogHeader>
         <DialogBody>
             <Textarea value={editContent} onChange={(e) => setEditContent(e.target.value)} />
+            { error.__html && (<div className="bg-red-500 rounded mt-8 py-2 px-3 text-white" dangerouslySetInnerHTML={error}></div>)}
         </DialogBody>
         <DialogFooter>
           <Button
@@ -60,7 +70,7 @@ export function CommentEditModal({comment,comments,setComments}) {
           >
             <span>Cancel</span>
           </Button>
-          <Button variant="gradient" color="green" onClick={handleEdit}>
+          <Button disabled={submitLoading} variant="gradient" color="green" onClick={handleEdit}>
             <span>Confirm</span>
           </Button>
         </DialogFooter>
