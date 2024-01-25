@@ -2,16 +2,18 @@ import { Textarea, Button, IconButton, Typography } from "@material-tailwind/rea
 import axiosClient from "../axios";
 import { useState } from "react";
 import { useStateContext } from "../context/ContextProvider";
+import { Popup } from "./Popup";
  
 export function CommentPost({id,userId,comments,setComments}) {
     const { currentUser } = useStateContext();
     const [content,setContent] = useState("");
-    const [error, setError] = useState("");
+    const [submitSuccess,setSubmitSuccess] = useState(false)
+    const [error, setError] = useState({__html:"",many:{}});
     const [submitLoading,setSubmitLoading] = useState(false)
 
     const handlePost = async() => {
         if (!content) {
-            setError("コメントを入力してください");
+            setError({__html:"コメントを入力してください"});
             return;
         }
         setSubmitLoading(true)
@@ -26,21 +28,26 @@ export function CommentPost({id,userId,comments,setComments}) {
             setComments([...comments, res])
             setContent("")
             setError("")
-            setSubmitLoading(false)
+            displayPopup()
         } catch (error) {
-        if (error.response) {
+        if (error.response.data.errors) {
           const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => [...next, ...accum], [])
-          setError({__html:finalErrors.join('<br>'), many: finalErrors})
+          setError({__html:finalErrors, many: finalErrors})
         }
             console.log(error)
-            setSubmitLoading(false)
+          }
+          setSubmitLoading(false)
+    }
 
-        }
+    const displayPopup = async() => {
+      setSubmitSuccess(true);
+      await new Promise((resolve) => setTimeout(resolve, 3000));      setSubmitSuccess(false)
+      setSubmitSuccess(false)
     }
   return (
     <div className="relative mx-6 w-[32rem]">
-      { error && (<Typography className="rounded justify-center flex py-2 px-3 text-red-500" >{error}</Typography>)}
-      <Textarea error={error} variant="static" placeholder="Your Comment" value={content} onChange={(e) => setContent(e.target.value)} rows={8} />
+      { error.__html && (<div className="rounded mt-8 py-2 px-3 text-red-500" dangerouslySetInnerHTML={error}></div>)}
+      <Textarea error={error.__html} variant="static" placeholder="Your Comment" value={content} onChange={(e) => setContent(e.target.value)} rows={8} />
       <div className="flex w-full items-center justify-end py-1.5">
         { !currentUser.id && 
           <Typography className="text-sm">コメントを投稿するにはログインが必要です。</Typography>
@@ -51,6 +58,7 @@ export function CommentPost({id,userId,comments,setComments}) {
           </Button>
         </div>
       </div>
+      { submitSuccess && <Popup />}
     </div>
   );
 }

@@ -26,8 +26,8 @@ class CommentController extends Controller
     public function create(Request $request)
     {
         $validatedData = $request->validate([
-            'user_id' => 'required|integer',
-            'post_id' => 'required|integer',
+            'user_id' => 'required',
+            'post_id' => 'required',
             'content' => 'required|string',
         ]);
         $comment = Comment::create([

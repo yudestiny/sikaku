@@ -76,12 +76,13 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+            'id' => 'required',
             'qualification' => 'required|string',
             'category' => 'required|integer',
             'status' => 'required|integer',
             'target' => 'required|string',
             'service' => 'required|string',
-            'start_date' => 'required|string',
+            'start_date' => 'required',
             'description' => 'string',
         ]);
 
@@ -140,12 +141,13 @@ class PostController extends Controller
     public function update (Request $request)
     {
         $validatedData = $request->validate([
+            'id' => 'required',
             'qualification' => 'required|string',
             'category' => 'required|integer',
             'status' => 'required|integer',
             'target' => 'required|string',
             'service' => 'required|string',
-            'start_date' => 'required|string',
+            'start_date' => 'required',
             'description' => 'string',
         ]);
         $post = Post::find($validatedData['id']);
