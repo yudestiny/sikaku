@@ -75,47 +75,48 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'qualification' => 'required|string',
+            'category' => 'required|integer',
+            'status' => 'required|integer',
+            'target' => 'required|string',
+            'service' => 'required|string',
+            'start_date' => 'required|string',
+            'description' => 'string',
+        ]);
 
-        $service = Service::CreateOrFirst(['name' => $request['service']]);
+        $service = Service::CreateOrFirst(['name' => $validatedData['service']]);
         $qualification = Qualification::CreateOrFirst([
-            'name' => $request['qualification']
+            'name' => $validatedData['qualification']
         ],[
-            'category_id' => $request['category']
+            'category_id' => $validatedData['category']
         ]);
 
         $post = Post::create([
-            'user_id' => $request['id'],
-            'target' => $request['target'],
+            'user_id' => $validatedData['id'],
+            'target' => $validatedData['target'],
             'qualification_id' => $qualification->id,
-            'status_id' => $request['status'],
+            'status_id' => $validatedData['status'],
             'service_id' => $service->id,
-            'start_date' => $request['start_date'],
-            'description' => $request['description'],
+            'start_date' => $validatedData['start_date'],
+            'description' => $validatedData['description'],
         ]);
-
-        // $post = new Post;
-        // $post->user_id = $request['id'];
-        // $post->target = $request['target'];
-        // $post->qualification_id = $qualification['id'];
-        // $post->status_id = $request['status'];
-        // $post->service_id = $service['id'];
-        // $post->start_date = $request['start_date'];
-        // $post->description = $request['description'];
-        // $post->save();
-
-        // $postId = $post->id;
-
-
 
         foreach ($request['steps'] as $step) {
             if (!$step['serviceName'] || !$step['period']) {break;}
-            $service = Service::CreateOrFirst(['name' => $step['serviceName']]);
+            $validatedStep = $step->validate([
+                'step_number' => 'required|integer',
+                'serviceName' => 'string',
+                'period' => 'required|string',
+                'description' => 'required|string',
+            ]);
+            $service = Service::CreateOrFirst(['name' => $validatedStep['serviceName']]);
             $stepPost = Step::create([
                 'post_id' => $post->id,
-                'step_number' => $step['stepNumber'],
+                'step_number' => $validatedStep['stepNumber'],
                 'service_id' =>$service->id,
-                'period' => $step['period'],
-                'description' => $step['description'],
+                'period' => $validatedStep['period'],
+                'description' => $validatedStep['description'],
             ]);
         }
 
@@ -138,17 +139,26 @@ class PostController extends Controller
 
     public function update (Request $request)
     {
-        $post = Post::find($request['id']);
+        $validatedData = $request->validate([
+            'qualification' => 'required|string',
+            'category' => 'required|integer',
+            'status' => 'required|integer',
+            'target' => 'required|string',
+            'service' => 'required|string',
+            'start_date' => 'required|string',
+            'description' => 'string',
+        ]);
+        $post = Post::find($validatedData['id']);
         $qualification = Qualification::find($post->qualification_id);
 
-        if ($qualification['name'] !== $request['qualification']) {
+        if ($qualification['name'] !== $validatedData['qualification']) {
             $qualification->update([
                 'name' => $request['qualification'],
             ]);
         }
-        $qualificationId = Qualification::select('id')->where('name', $request['qualification'])->first();
-        $service = Service::createOrFirst(['name' => $request['service']]);
-        $exSteps = Step::select('id')->where('post_id', $request['id'])->get()->toArray();
+        $qualificationId = Qualification::select('id')->where('name', $validatedData['qualification'])->first();
+        $service = Service::createOrFirst(['name' => $validatedData['service']]);
+        $exSteps = Step::select('id')->where('post_id', $validatedData['id'])->get()->toArray();
 
         $ExSteps = [];
         foreach ($exSteps as $ex) {
@@ -156,25 +166,31 @@ class PostController extends Controller
         }
 
         foreach ($request['steps'] as $step) {
-            $exStep = Step::where('id',$step['id'])->first();
-            $serviceStep = Service::createOrFirst(['name' => $step['name']]);
+            $validatedStep = $step->validate([
+                'step_number' => 'required|integer',
+                'serviceName' => 'string',
+                'period' => 'required|string',
+                'description' => 'required|string',
+            ]);
+            $exStep = Step::where('id',$validatedStep['id'])->first();
+            $serviceStep = Service::createOrFirst(['name' => $validatedStep['name']]);
 
             if ($exStep && in_array($exStep['id'], $ExSteps)) {
                 $ExSteps = array_diff($ExSteps, [$exStep['id']]);
                 $exStep->update([
                     'id' => $exStep['id'],
-                    'step_number' => $step['step_number'],
+                    'step_number' => $validatedStep['step_number'],
                     'service_id' => $serviceStep['id'],
-                    'period' => $step['period'],
-                    'description' => $step['description'],
+                    'period' => $validatedStep['period'],
+                    'description' => $validatedStep['description'],
                 ]);
             } else {
                 Step::create([
                     'post_id' => $post->id,
-                    'step_number' => $step['step_number'],
+                    'step_number' => $validatedStep['step_number'],
                     'service_id' => $serviceStep['id'],
-                    'period' => $step['period'],
-                    'description' => $step['description'],
+                    'period' => $validatedStep['period'],
+                    'description' => $validatedStep['description'],
                 ]);
                 
             }
@@ -189,10 +205,10 @@ class PostController extends Controller
         $post->update([
             'qualification_id' => $qualificationId->id,
             'service_id' => $service['id'],
-            'target' => $request['target'],
-            'status_id' => $request['status'],
-            'start_date' => $request['start_date'],
-            'description' => $request['description'],
+            'target' => $validatedData['target'],
+            'status_id' => $validatedData['status'],
+            'start_date' => $validatedData['start_date'],
+            'description' => $validatedData['description'],
             'updated_at' => now()
         ]);
 

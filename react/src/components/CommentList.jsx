@@ -7,7 +7,6 @@ import { useStateContext } from '../context/ContextProvider';
 
 const CommentList = ({postUser,comments,setComments}) => { 
   const { currentUser } = useStateContext();
-
   const handleDelete = (id) => {
     if (window.confirm("本当に削除してもよろしいですか？")) {
       try {
@@ -35,7 +34,7 @@ const CommentList = ({postUser,comments,setComments}) => {
             </div>
             <div>{comment.content}</div>
             <div className='flex justify-end'>
-              {currentUser.id === comment.user_id || currentUser.id === postUser ? (
+              {(currentUser.id === comment.user_id || currentUser.id === postUser) && comment.id ? (
                 <div className='flex gap-4'>
                   <CommentEditModal comment={comment}  comments={comments} setComments={setComments} />
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" 

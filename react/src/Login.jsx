@@ -17,6 +17,7 @@ export function Login() {
   const [remember,setRemember] = useState(false);
     const [error, setError] = useState({__html: "", many: {}});
   const { currentUser,setCurrentUser,userToken,setUserToken } = useStateContext();
+  const [submitLoading,setSubmitLoading] = useState(false)
   const navigate = useNavigate();
 
   if (userToken) {
@@ -25,6 +26,7 @@ export function Login() {
 
   const handleSubmit = async(e) => {
       e.preventDefault();
+      setSubmitLoading(true)
       await axiosClient.post('login',{
         email,
         password,
@@ -37,6 +39,7 @@ export function Login() {
       })
       .then(() => {
       navigate("/");
+      setSubmitLoading(false)
       })
       .catch((error) => {
         if (error) {
@@ -47,6 +50,7 @@ export function Login() {
         setError({__html:finalErrors, many: finalErrors})
       }
         console.error(error)
+        setSubmitLoading(false)
       })
     }
   return (
@@ -54,10 +58,7 @@ export function Login() {
       <Typography variant="h4" color="blue-gray">
         ログイン
       </Typography>
-      {/* <Typography color="gray" className="mt-1 font-normal">
-        Thank you always! Enter your details to Login.
-      </Typography> */}
-      { error.__html && (<div className="bg-red-500 rounded mt-8 py-2 px-3 text-white" dangerouslySetInnerHTML={error}></div>)}
+      { error.__html && (<div className="rounded mt-8 py-2 px-3 text-red-500" dangerouslySetInnerHTML={error}></div>)}
       <form onSubmit={handleSubmit} className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
         <div className="mb-1 flex flex-col gap-6">
           <Typography variant="h6" color="blue-gray" className="-mb-3">
@@ -109,7 +110,7 @@ export function Login() {
           onChange={e => setRemember(e.target.checked)}
           containerProps={{ className: "-ml-2.5" }}
         />
-        <Button type="submit" className="mt-6" fullWidth>
+        <Button type="submit" disabled={submitLoading} className="mt-6" fullWidth>
           ログイン
         </Button>
         <Typography color="gray" className="mt-4 text-center font-normal">

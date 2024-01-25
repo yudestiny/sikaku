@@ -17,6 +17,7 @@ export function Signup() {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [error, setError] = useState({__html: "", many: {}});
   const { currentUser,setCurrentUser,userToken,setUserToken } = useStateContext();
+  const [submitLoading,setSubmitLoading] = useState(false)
   const navigate = useNavigate();
 
   if (userToken) {
@@ -25,6 +26,7 @@ export function Signup() {
 
   const handleSubmit = async(e) => {
       e.preventDefault();
+      setSubmitLoading(true)
       await axiosClient.post('signup',{
         name,
         email,
@@ -35,6 +37,7 @@ export function Signup() {
         console.log(data)
       setCurrentUser(data.user)
       setUserToken(data.token)
+      setSubmitLoading(false)
       navigate("/");
 
       })
@@ -44,6 +47,7 @@ export function Signup() {
           setError({__html:finalErrors.join('<br>'), many: finalErrors})
         }
         console.error(error)
+      setSubmitLoading(false)
       })
 
   }
@@ -139,7 +143,7 @@ export function Signup() {
           }
           containerProps={{ className: "-ml-2.5" }}
         /> */}
-        <Button type="submit" className="mt-6" fullWidth>
+        <Button disabled={submitLoading} type="submit" className="mt-6" fullWidth>
           登録する
         </Button>
         <Typography color="gray" className="mt-4 text-center font-normal">

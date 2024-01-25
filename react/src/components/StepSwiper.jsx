@@ -48,14 +48,14 @@ export default function StepSwiper({post}) {
         }}
         navigation={true}
         modules={[FreeMode, Pagination, Navigation]}
-        className="mySwiper justify-center items-center pb-32"
+        className="mySwiper justify-center items-center w-full pb-32"
       >
       {post.steps?.map((step,index) => {
         return (
-    <div key={index}>
-      <SwiperSlide className={`justify-center container my-12 items-center mx-auto gap-x-6`}>
+    <div key={step.id}>
+      <SwiperSlide className={`my-12 items-center gap-x-6`}>
 
-        <Card className="justify-center mx-14 pt-3 shadow-xl">
+        <Card className="justify-center min-w-0 mx-14 pt-3 shadow-xl">
           <CardFooter className="flex pb-3 pt-0 mb-0">
             <Typography className='text-center items-center py-2 mr-3 justify-center text-md font-extrabold text-black'>STEP<span className=''>{step.step_number}</span></Typography>
             <Button disabled className='bg-black px-3 rounded-full'>{step.period}</Button>
