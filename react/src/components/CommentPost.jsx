@@ -7,7 +7,8 @@ import { Popup } from "./Popup";
 export function CommentPost({id,userId,comments,setComments}) {
     const { currentUser } = useStateContext();
     const [content,setContent] = useState("");
-    const [submitSuccess,setSubmitSuccess] = useState(false)
+    const [popup,setPopup] = useState(false)
+    const [submitResult,setSubmitResult] = useState(false)
     const [error, setError] = useState({__html:"",many:{}});
     const [submitLoading,setSubmitLoading] = useState(false)
 
@@ -28,22 +29,25 @@ export function CommentPost({id,userId,comments,setComments}) {
             setComments([...comments, res])
             setContent("")
             setError("")
-            displayPopup()
+            displayPopup("commentSuccess")
         } catch (error) {
         if (error.response.data.errors) {
           const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => [...next, ...accum], [])
           setError({__html:finalErrors, many: finalErrors})
         }
             console.log(error)
+            displayPopup("commentFailed")
           }
           setSubmitLoading(false)
     }
 
-    const displayPopup = async() => {
-      setSubmitSuccess(true);
-      await new Promise((resolve) => setTimeout(resolve, 3000));      setSubmitSuccess(false)
-      setSubmitSuccess(false)
+    const displayPopup = async(result) => {
+      setPopup(true);
+      setSubmitResult(result)
+      await new Promise((resolve) => setTimeout(resolve, 3000));     
+      setPopup(false);
     }
+    console.log(popup)
   return (
     <div className="relative mx-6 w-[32rem]">
       { error.__html && (<div className="rounded mt-8 py-2 px-3 text-red-500" dangerouslySetInnerHTML={error}></div>)}
@@ -58,7 +62,7 @@ export function CommentPost({id,userId,comments,setComments}) {
           </Button>
         </div>
       </div>
-      { submitSuccess && <Popup />}
+      { popup && <Popup form={submitResult} />}
     </div>
   );
 }
