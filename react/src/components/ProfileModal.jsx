@@ -11,13 +11,16 @@ import {
   Checkbox,
 } from "@material-tailwind/react";
 import axiosClient from "../axios";
+import { useStateContext } from "../context/ContextProvider";
  
 export function ProfileModal({userProfile}) {
+  const { currentUser } = useStateContext();
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState(userProfile.email);
   const [image, setImage] = useState(userProfile.image);
   const handleOpen = () => setOpen((cur) => !cur);
 
+  console.log(currentUser.id)
 const handleEdit = async() => {
     try {
         const formData = new FormData();
@@ -34,7 +37,9 @@ const handleEdit = async() => {
   }
   return (
     <>
+    {currentUser.id === userProfile.id && 
       <Button onClick={handleOpen}>プロフィールを編集する</Button>
+    }
       <Dialog
         size="xs"
         open={open}
