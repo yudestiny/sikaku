@@ -49,7 +49,7 @@ class PostController extends Controller
             ->join('statuses', 'posts.status_id', '=', 'statuses.id')
             ->leftJoin('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
             ->join('categories', 'qualifications.category_id', '=', 'categories.id')
-            ->select('posts.id as id', 'posts.target', 'users.name as user_name', 'qualifications.name as qualification_name',
+            ->select('posts.id as id', 'posts.score', 'posts.target', 'users.name as user_name', 'qualifications.name as qualification_name',
             'posts.created_at', 'posts.description', 'categories.id as category_id', 'services.name as service_name');
 
             return $favorites->paginate(9);
@@ -58,7 +58,7 @@ class PostController extends Controller
         $query = Post::with('favorites')->join('users', 'posts.user_id', '=', 'users.id')
         ->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
         ->join('categories', 'qualifications.category_id', '=', 'categories.id')
-        ->select('posts.id', 'posts.target', 'users.name as user_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description', 'categories.id as category_id');
+        ->select('posts.id', 'posts.score', 'posts.target', 'users.name as user_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description', 'categories.id as category_id');
 
         if (!is_null($request['category'])) {
             $query = $query->where('categories.id', '=', $request['category']);
@@ -83,6 +83,7 @@ class PostController extends Controller
             'target' => 'required|string',
             'service' => 'required|string',
             'start_date' => 'required',
+            'score' => 'string',
             'description' => 'string',
         ]);
 
@@ -100,19 +101,20 @@ class PostController extends Controller
             'status_id' => $validatedData['status'],
             'service_id' => $service->id,
             'start_date' => $validatedData['start_date'],
+            'score' => $validatedData['score'],
             'description' => $validatedData['description'],
         ]);
 
         foreach ($request['steps'] as $step) {
             if (!$step['serviceName'] || !$step['period']) {break;}
             $validatedStep = $step->validate([
-                'step_number' => 'required|integer',
+                'stepNumber' => 'required|integer',
                 'serviceName' => 'string',
                 'period' => 'required|string',
                 'description' => 'required|string',
             ]);
             $service = Service::CreateOrFirst(['name' => $validatedStep['serviceName']]);
-            $stepPost = Step::create([
+            Step::create([
                 'post_id' => $post->id,
                 'step_number' => $validatedStep['stepNumber'],
                 'service_id' =>$service->id,
@@ -127,7 +129,7 @@ class PostController extends Controller
 
     public function detail($post_id)
     {
-        $detail = Post::with('steps')->select('posts.id', 'users.id as user_id', 'posts.target', 'posts.start_date', 'statuses.name as status_name', 'statuses.id as status_id', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
+        $detail = Post::with('steps')->select('posts.id', 'posts.score', 'users.id as user_id', 'posts.target', 'posts.start_date', 'statuses.name as status_name', 'statuses.id as status_id', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
         ->join('users', 'posts.user_id', '=', 'users.id')
             ->join('services', 'posts.service_id', '=', 'services.id')
             ->join('statuses', 'posts.status_id', '=', 'statuses.id')
@@ -148,6 +150,7 @@ class PostController extends Controller
             'target' => 'required|string',
             'service' => 'required|string',
             'start_date' => 'required',
+            'score' => 'string',
             'description' => 'string',
         ]);
         $post = Post::find($validatedData['id']);
@@ -210,6 +213,7 @@ class PostController extends Controller
             'target' => $validatedData['target'],
             'status_id' => $validatedData['status'],
             'start_date' => $validatedData['start_date'],
+            'score' => $validatedData['score'],
             'description' => $validatedData['description'],
             'updated_at' => now()
         ]);

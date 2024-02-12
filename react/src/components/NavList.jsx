@@ -117,8 +117,9 @@ export function NavbarSimple() {
           as="a"
           href="/"
           variant="h6"
-          className="mr-4 cursor-pointer py-1.5 lg:text-2xl"
+          className="flex items-center gap-2 mr-4 cursor-pointer py-1.5 lg:text-2xl"
         >
+          <img src="https://th.bing.com/th/id/OIG3.XM6JITQF8Kj6gZOQMrK.?pid=ImgGn" alt="logo-ct" className="w-10" />
           sikaku
         </Typography>
         <div className="hidden lg:block">

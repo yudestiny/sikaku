@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('service_id')->constrained();
             $table->date('start_date');
             $table->text('target');
+            $table->text('score')->nullable();
             $table->text('description')->nullable();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
