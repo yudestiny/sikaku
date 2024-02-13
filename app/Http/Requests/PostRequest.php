@@ -22,9 +22,20 @@ class PostRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id' => 'required',
+            'qualification' => 'required|string',
+            'category' => 'required|integer',
+            'status' => 'required|integer',
+            'service' => 'required|string',
+            'score' => 'string',
             'target' => 'required|string|max:200',
             'start_date' => 'required|date',
-            'description' => 'required|string|max:1000'
+            'description' => 'required|string|max:1000',
+            'steps' => 'required|array',
+            'steps.*.stepNumber' => 'required|integer',
+            'steps.*.serviceName' => 'nullable|string',
+            'steps.*.period' => 'nullable|string',
+            'steps.*.description' => 'nullable|string',
         ];
     }
 }

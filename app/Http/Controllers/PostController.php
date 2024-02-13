@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Favorite;
 use App\Models\Post;
@@ -73,53 +74,36 @@ class PostController extends Controller
         return $query->paginate(9);
     }
 
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        $validatedData = $request->validate([
-            'id' => 'required',
-            'qualification' => 'required|string',
-            'category' => 'required|integer',
-            'status' => 'required|integer',
-            'target' => 'required|string',
-            'service' => 'required|string',
-            'start_date' => 'required',
-            'score' => 'string',
-            'description' => 'string',
-        ]);
-
-        $service = Service::CreateOrFirst(['name' => $validatedData['service']]);
+        $service = Service::CreateOrFirst(['name' => $request['service']]);
         $qualification = Qualification::CreateOrFirst([
-            'name' => $validatedData['qualification']
+            'name' => $request['qualification']
         ],[
-            'category_id' => $validatedData['category']
+            'category_id' => $request['category']
         ]);
 
         $post = Post::create([
-            'user_id' => $validatedData['id'],
-            'target' => $validatedData['target'],
+            'user_id' => $request['id'],
+            'target' => $request['target'],
             'qualification_id' => $qualification->id,
-            'status_id' => $validatedData['status'],
+            'status_id' => $request['status'],
             'service_id' => $service->id,
-            'start_date' => $validatedData['start_date'],
-            'score' => $validatedData['score'],
-            'description' => $validatedData['description'],
+            'start_date' => $request['start_date'],
+            'score' => $request['score'],
+            'description' => $request['description'],
         ]);
-
+        $steps = [];
+        
         foreach ($request['steps'] as $step) {
             if (!$step['serviceName'] || !$step['period']) {break;}
-            $validatedStep = $step->validate([
-                'stepNumber' => 'required|integer',
-                'serviceName' => 'string',
-                'period' => 'required|string',
-                'description' => 'required|string',
-            ]);
-            $service = Service::CreateOrFirst(['name' => $validatedStep['serviceName']]);
+            $service = Service::CreateOrFirst(['name' => $step['serviceName']]);
             Step::create([
                 'post_id' => $post->id,
-                'step_number' => $validatedStep['stepNumber'],
+                'step_number' => $step['stepNumber'],
                 'service_id' =>$service->id,
-                'period' => $validatedStep['period'],
-                'description' => $validatedStep['description'],
+                'period' => $step['period'],
+                'description' => $step['description'],
             ]);
         }
 
