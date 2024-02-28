@@ -50,7 +50,7 @@ export function Pagination({params}) {
 
     try {
       const response = await axiosClient.get(`posts/index/?page=${posts.current_page + 1}`,{params});
-      console.log(response);
+      console.log(response.data);
       setPosts(response.data);
     } catch (err) {
       console.log(err);

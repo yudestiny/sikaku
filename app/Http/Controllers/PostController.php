@@ -31,8 +31,8 @@ class PostController extends Controller
     {
         return Post::join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
         ->select('qualifications.id', 'qualifications.name', DB::raw('count(posts.qualification_id) as count'))
-            ->groupBy('qualifications.id')
-            ->groupBy('qualifications.name')
+        ->groupBy('qualifications.id')
+        ->groupBy('qualifications.name')
         ->limit(9)
         ->orderBy('count', 'desc')
         ->get();
@@ -40,34 +40,20 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
-        if (!is_null($request['favorites'])) {
-            $favorites = Post::whereHas('favorites', function($q) use ($request) {
-                $q->where('user_id', '=', $request['favorites']);
-            })
-            ->with('favorites')
-            ->join('users', 'posts.user_id', '=', 'users.id')
-            ->join('services', 'posts.service_id', '=', 'services.id')
-            ->join('statuses', 'posts.status_id', '=', 'statuses.id')
-            ->leftJoin('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
-            ->join('categories', 'qualifications.category_id', '=', 'categories.id')
-            ->select('posts.id as id', 'posts.score', 'posts.target', 'users.name as user_name', 'qualifications.name as qualification_name',
-            'posts.created_at', 'posts.description', 'categories.id as category_id', 'services.name as service_name');
-
-            return $favorites->paginate(9);
-        }
-
-        $query = Post::with('favorites')->join('users', 'posts.user_id', '=', 'users.id')
+        $query = Post::withCount('favorites')->join('users', 'posts.user_id', '=', 'users.id')
         ->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
         ->join('categories', 'qualifications.category_id', '=', 'categories.id')
         ->select('posts.id', 'posts.score', 'posts.target', 'users.name as user_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description', 'categories.id as category_id');
 
-        if (!is_null($request['category'])) {
+        if (!is_null($request['favorites'])) {
+            $query = $query->whereHas('favorites', function($q) use ($request) {
+                $q->where('user_id', '=', $request['favorites']);
+            });
+        } elseif (!is_null($request['category'])) {
             $query = $query->where('categories.id', '=', $request['category']);
-        }
-        if (!is_null($request['qualification'])) {
+        } elseif (!is_null($request['qualification'])) {
             $query = $query->where('qualifications.id', '=', $request['qualification']);
-        }
-        if (!is_null($request['user'])) {
+        } elseif (!is_null($request['user'])) {
             $query = $query->where('posts.user_id', '=', $request['user']);
         }
 
@@ -114,11 +100,11 @@ class PostController extends Controller
     public function detail($post_id)
     {
         $detail = Post::with('steps')->select('posts.id', 'posts.score', 'users.id as user_id', 'posts.target', 'posts.start_date', 'statuses.name as status_name', 'statuses.id as status_id', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
-        ->join('users', 'posts.user_id', '=', 'users.id')
+            ->join('users', 'posts.user_id', '=', 'users.id')
             ->join('services', 'posts.service_id', '=', 'services.id')
             ->join('statuses', 'posts.status_id', '=', 'statuses.id')
-        ->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
-        ->where('posts.id', $post_id)
+            ->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
+            ->where('posts.id', $post_id)
             ->first();
 
         return response()->json($detail);
@@ -129,7 +115,6 @@ class PostController extends Controller
         $validatedData = $request->validate([
             'id' => 'required',
             'qualification' => 'required|string',
-            'category' => 'required|integer',
             'status' => 'required|integer',
             'target' => 'required|string',
             'service' => 'required|string',
@@ -203,7 +188,6 @@ class PostController extends Controller
         ]);
 
         return ['message' => '編集を保存しました'];
-
     }
 
     public function destroy ($post_id)
