@@ -2,7 +2,7 @@ name: Build React on S3
 on:
   push:
       branches:
-        - master
+        - develop
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,6 +15,12 @@ jobs:
           node-version: '18'
       - name: Checkout
         uses: actions/checkout@master  # リポジトリをチェックアウト
+        
+      - name: Prepare .env.production file
+        run: |
+          cat << EOF > .env.production
+          VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}
+          EOF
         
       - name: Install Dependencies
         run: npm install

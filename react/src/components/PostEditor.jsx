@@ -19,6 +19,7 @@ const PostEditor = () => {
     const [startDate,setStartDate] = useState();
     const [status,setStatus] = useState();
     const [service,setService] = useState();
+    const [score,setScore] = useState();
     const [description,setDescription] = useState();
     const [steps,setSteps] = useState();
 
@@ -59,6 +60,7 @@ const PostEditor = () => {
     setStartDate(pos.start_date);
     setStatus(pos.status_id);
     setService(pos.service_name);
+    setScore(pos.score);
     setDescription(pos.description);
     setSteps(pos.steps);
     setStatuses(responseStatus.data);
@@ -143,6 +145,7 @@ const PostEditor = () => {
         target,
         service,
         start_date:startDate,
+        score,
         description,
         steps
       }).then (() => {
@@ -195,6 +198,14 @@ const PostEditor = () => {
                       {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="green" class="text-white bg-white w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg> */}
+                    </div>
+                  </div>
+                  <div className="sm:w-1/2 mb-8">
+                    <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">
+                      スコア
+                    </label>
+                    <div className="mt-2 sm:mr-2 flex">
+                      <Input value={score} onChange={e => setScore(e.target.value)} className='mr-4' placeholder='例：890'/>
                     </div>
                   </div>
                 </div>

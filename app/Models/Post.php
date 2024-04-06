@@ -23,6 +23,7 @@ class Post extends Model
         'favorite_number',
         'start_date',
         'target',
+        'score',
         'description',
         'service_id',
         'status_id'

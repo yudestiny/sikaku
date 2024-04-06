@@ -36,6 +36,7 @@ class FavoriteController extends Controller
             'user_id' => $request['user_id'],
             'post_id' => $request['post_id'],
         ]);
+
         return response()->json(['message' => 'added']);
     }
 
@@ -54,6 +55,7 @@ class FavoriteController extends Controller
             ->orderBy('count','desc')
             ->groupBy('users.id', 'users.name', 'users.image')
             ->get();
+            
         return response()->json($favorites);
     }
 }

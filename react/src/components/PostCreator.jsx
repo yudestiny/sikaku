@@ -16,6 +16,7 @@ const PostCreator = () => {
     const [submitLoading,setSubmitLoading] = useState(false)
     const [error, setError] = useState({__html: "", many: {}});
     const [qualification,setQualification] = useState();
+    const [score,setScore] = useState("");
     const [category,setCategory] = useState("");
     const [categories,setCategories] = useState([]);
     const [target,setTarget] = useState("");
@@ -80,39 +81,6 @@ const PostCreator = () => {
     setSteps(data);
   }
 
-//   const handleChangeDate = (e) => {
-
-//   if (e.target.value) {
-//     setStartDate(e.target.value);
-//   } else {
-//     const nowYear = startDate.slice(0, 4);
-//     const nowMonth = startDate.substr(5, 2);
-//     const nowDate = startDate.slice(-2);
-
-//     if (nowDate !== "01") {
-//       setStartDate(`${nowYear}-${nowMonth}-01`);
-//     }
-//     else{
-//       switch (nowMonth) {
-//         case "02":
-//           if ((nowYear * 1) % 4 === 0) {
-//             setStartDate(`${nowYear}-${nowMonth}-29`);
-//           } else {
-//             setStartDate(`${nowYear}-${nowMonth}-28`);
-//           }
-//           break;
-//         case "04":
-//         case "06":
-//         case "09":
-//         case "11":
-//           setStartDate(`${nowYear}-${nowMonth}-30`);
-//           break;
-//         default:
-//           break;
-//       }
-//     }
-//   }
-// }
 
 
   const handleAdd = (index) => {
@@ -166,6 +134,7 @@ const PostCreator = () => {
     const state = {
           id:currentUser?.id,
           qualification,
+          score,
           category,
           status,
           target,
@@ -175,22 +144,21 @@ const PostCreator = () => {
           steps
         }
     
-      const response = axiosClient.post(`/posts/create`, state)
-        .then(response => {
-          console.log(response)
-          const post = response.data;
-          setSubmitLoading(false)
-          navigate(`/posts/detail/${post.id}`);
-        })
-       .catch (error => {
-         console.log(error.response.data)
-         
-         if (error.response.data.errors) {
-           const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => [...next, ...accum], [])
-           setError({__html:error.response.data.message, many: finalErrors})
-          }
-        })
-        setSubmitLoading(false)
+    axiosClient.post(`/posts/create`, state)
+    .then(response => {
+      console.log(response)
+      const post = response.data;
+      setSubmitLoading(false)
+      navigate(`/posts/detail/${post.id}`);
+    })
+    .catch (error => {
+      console.log(error.response.data)
+      if (error.response.data.errors) {
+        const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => [...next, ...accum], [])
+        setError({__html:error.response.data.message, many: finalErrors})
+      }
+    })
+      setSubmitLoading(false)
     }
   return (
     <>
@@ -207,25 +175,35 @@ const PostCreator = () => {
             </div>
 
               <div className='grid-cols-2'>
-                <div className='col-span- sm:flex'>
-                  <div className="sm:w-1/2 mb-8">
+                <div className='col-span-1'>
+                  <div className="sm:w-1/4">
                     <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900 mb-2">
                       取得資格
                     </label>
-                    <Select label="資格カテゴリーを選択" onChange={(e) => setCategory(e)}>
+                  <Select label="資格カテゴリーを選択" onChange={(e) => setCategory(e)}>
           { categories?.map((item) => (
             <Option key={item.id} value={`${item.id}`}>{item.name}</Option>
-          ))}
-        </Select>
-                    <div className="mt-2 sm:mr-2 flex">
-                      <Input value={qualification} onChange={e => setQualification(e.target.value)} className='mr-4' placeholder='例：ITパスポート'/>
-                      {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="green" class="text-white bg-white w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg> */}
+            ))}
+                  </Select>
+                  </div>
+                  <div className='col-span-1 sm:flex items-end'>
+                    <div className="mb-8 sm:mr-2 sm:w-1/2">
+                      <div className="mt-2 flex">
+                        <Input value={qualification} onChange={e => setQualification(e.target.value)} className='mr-4' placeholder='例：ITパスポート'/>
+                      </div>
+                    </div>
+                    <div className="sm:w-1/2 mb-8">
+                      <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900 mb-2">
+                        取得スコア
+                      </label>
+                      <div className="mt-2 flex">
+                        <Input value={score} onChange={e => setScore(e.target.value)} className='mr-4' placeholder='例：890'/>
+                      </div>
                     </div>
                   </div>
                 </div>
 
+                
                 <div className='col-span-1 sm:flex'>
                   <div className="mb-8 sm:mr-2 sm:w-1/2">
                     <label htmlFor="about" className="block text-sm font-semibold leading-6 text-gray-900">

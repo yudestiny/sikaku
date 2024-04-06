@@ -32,6 +32,13 @@ class PostsTableSeeder extends Seeder
                 'created_at' => now()->subDays(rand(1, 365))->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s'),
             ];
+            if ($posts[$i]['qualification_id'] === 2) {
+                $posts[$i]['score'] = rand(0, 180)*5;
+            } elseif ($posts[$i]['qualification_id'] === 4) {
+                $posts[$i]['score'] = rand(2, 18)*0.5;
+            }elseif ($posts[$i]['qualification_id'] === 4) {
+                $posts[$i]['score'] = rand(0, 120);
+            }
         }
 
         foreach ($posts as $post) {

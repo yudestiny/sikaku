@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Favorite;
 use App\Models\Post;
@@ -30,8 +31,8 @@ class PostController extends Controller
     {
         return Post::join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
         ->select('qualifications.id', 'qualifications.name', DB::raw('count(posts.qualification_id) as count'))
-            ->groupBy('qualifications.id')
-            ->groupBy('qualifications.name')
+        ->groupBy('qualifications.id')
+        ->groupBy('qualifications.name')
         ->limit(9)
         ->orderBy('count', 'desc')
         ->get();
@@ -39,85 +40,56 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
-        if (!is_null($request['favorites'])) {
-            $favorites = Post::whereHas('favorites', function($q) use ($request) {
-                $q->where('user_id', '=', $request['favorites']);
-            })
-            ->with('favorites')
-            ->join('users', 'posts.user_id', '=', 'users.id')
-            ->join('services', 'posts.service_id', '=', 'services.id')
-            ->join('statuses', 'posts.status_id', '=', 'statuses.id')
-            ->leftJoin('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
-            ->join('categories', 'qualifications.category_id', '=', 'categories.id')
-            ->select('posts.id as id', 'posts.target', 'users.name as user_name', 'qualifications.name as qualification_name',
-            'posts.created_at', 'posts.description', 'categories.id as category_id', 'services.name as service_name');
-
-            return $favorites->paginate(9);
-        }
-
-        $query = Post::with('favorites')->join('users', 'posts.user_id', '=', 'users.id')
+        $query = Post::withCount('favorites')->join('users', 'posts.user_id', '=', 'users.id')
         ->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
         ->join('categories', 'qualifications.category_id', '=', 'categories.id')
-        ->select('posts.id', 'posts.target', 'users.name as user_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description', 'categories.id as category_id');
+        ->select('posts.id', 'posts.score', 'posts.target', 'users.name as user_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description', 'categories.id as category_id');
 
-        if (!is_null($request['category'])) {
+        if (!is_null($request['favorites'])) {
+            $query = $query->whereHas('favorites', function($q) use ($request) {
+                $q->where('user_id', '=', $request['favorites']);
+            });
+        } elseif (!is_null($request['category'])) {
             $query = $query->where('categories.id', '=', $request['category']);
-        }
-        if (!is_null($request['qualification'])) {
+        } elseif (!is_null($request['qualification'])) {
             $query = $query->where('qualifications.id', '=', $request['qualification']);
-        }
-        if (!is_null($request['user'])) {
+        } elseif (!is_null($request['user'])) {
             $query = $query->where('posts.user_id', '=', $request['user']);
         }
 
         return $query->paginate(9);
     }
 
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        $validatedData = $request->validate([
-            'id' => 'required',
-            'qualification' => 'required|string',
-            'category' => 'required|integer',
-            'status' => 'required|integer',
-            'target' => 'required|string',
-            'service' => 'required|string',
-            'start_date' => 'required',
-            'description' => 'string',
-        ]);
-
-        $service = Service::CreateOrFirst(['name' => $validatedData['service']]);
+        $service = Service::CreateOrFirst(['name' => $request['service']]);
         $qualification = Qualification::CreateOrFirst([
-            'name' => $validatedData['qualification']
+            'name' => $request['qualification']
         ],[
-            'category_id' => $validatedData['category']
+            'category_id' => $request['category']
         ]);
 
         $post = Post::create([
-            'user_id' => $validatedData['id'],
-            'target' => $validatedData['target'],
+            'user_id' => $request['id'],
+            'target' => $request['target'],
             'qualification_id' => $qualification->id,
-            'status_id' => $validatedData['status'],
+            'status_id' => $request['status'],
             'service_id' => $service->id,
-            'start_date' => $validatedData['start_date'],
-            'description' => $validatedData['description'],
+            'start_date' => $request['start_date'],
+            'score' => $request['score'],
+            'description' => $request['description'],
         ]);
-
+        $steps = [];
+        
         foreach ($request['steps'] as $step) {
             if (!$step['serviceName'] || !$step['period']) {break;}
-            $validatedStep = $step->validate([
-                'step_number' => 'required|integer',
-                'serviceName' => 'string',
-                'period' => 'required|string',
-                'description' => 'required|string',
-            ]);
-            $service = Service::CreateOrFirst(['name' => $validatedStep['serviceName']]);
-            $stepPost = Step::create([
+            $service = Service::CreateOrFirst(['name' => $step['serviceName']]);
+            Step::create([
                 'post_id' => $post->id,
-                'step_number' => $validatedStep['stepNumber'],
+                'step_number' => $step['stepNumber'],
                 'service_id' =>$service->id,
-                'period' => $validatedStep['period'],
-                'description' => $validatedStep['description'],
+                'period' => $step['period'],
+                'description' => $step['description'],
             ]);
         }
 
@@ -127,12 +99,12 @@ class PostController extends Controller
 
     public function detail($post_id)
     {
-        $detail = Post::with('steps')->select('posts.id', 'users.id as user_id', 'posts.target', 'posts.start_date', 'statuses.name as status_name', 'statuses.id as status_id', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
-        ->join('users', 'posts.user_id', '=', 'users.id')
+        $detail = Post::with('steps')->select('posts.id', 'posts.score', 'users.id as user_id', 'posts.target', 'posts.start_date', 'statuses.name as status_name', 'statuses.id as status_id', 'posts.updated_at', 'users.name as user_name', 'services.name as service_name', 'qualifications.name as qualification_name', 'posts.created_at', 'posts.description')
+            ->join('users', 'posts.user_id', '=', 'users.id')
             ->join('services', 'posts.service_id', '=', 'services.id')
             ->join('statuses', 'posts.status_id', '=', 'statuses.id')
-        ->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
-        ->where('posts.id', $post_id)
+            ->join('qualifications', 'posts.qualification_id', '=', 'qualifications.id')
+            ->where('posts.id', $post_id)
             ->first();
 
         return response()->json($detail);
@@ -143,11 +115,11 @@ class PostController extends Controller
         $validatedData = $request->validate([
             'id' => 'required',
             'qualification' => 'required|string',
-            'category' => 'required|integer',
             'status' => 'required|integer',
             'target' => 'required|string',
             'service' => 'required|string',
             'start_date' => 'required',
+            'score' => 'string',
             'description' => 'string',
         ]);
         $post = Post::find($validatedData['id']);
@@ -210,12 +182,12 @@ class PostController extends Controller
             'target' => $validatedData['target'],
             'status_id' => $validatedData['status'],
             'start_date' => $validatedData['start_date'],
+            'score' => $validatedData['score'],
             'description' => $validatedData['description'],
             'updated_at' => now()
         ]);
 
         return ['message' => '編集を保存しました'];
-
     }
 
     public function destroy ($post_id)
